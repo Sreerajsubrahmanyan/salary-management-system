@@ -82,6 +82,17 @@ describe('EmployeeWorkspace', () => {
     await waitFor(() => expect(getEmployee).toHaveBeenCalledTimes(2))
   })
 
+  it('does not offer new salary entries for a former employee', async () => {
+    vi.mocked(getEmployee).mockResolvedValue({
+      data: { ...ada, status: 'terminated', salary_records: [ada.current_salary!] },
+    })
+    render(<EmployeeWorkspace />)
+    fireEvent.click(await screen.findByRole('button', { name: /Ada Lovelace/ }))
+
+    expect(await screen.findByText('New salary entries are closed for former employees.')).toBeTruthy()
+    expect(screen.queryByRole('button', { name: /record salary change/i })).toBeNull()
+  })
+
   it('creates a new employee and returns to the refreshed register', async () => {
     vi.mocked(createEmployee).mockResolvedValue({ data: ada })
     render(<EmployeeWorkspace />)

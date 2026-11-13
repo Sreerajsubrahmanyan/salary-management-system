@@ -89,6 +89,23 @@ module Api
         assert_nil previous_record.reload.end_date
       end
 
+      test "rejects a new salary record for a former employee" do
+        previous_record = @employee.salary_records.create!(
+          amount: "72000", currency: "USD", effective_date: Date.new(2024, 1, 1), end_date: Date.current - 1.day
+        )
+        @employee.update!(status: "terminated")
+        sign_in
+
+        post salary_records_path,
+             params: { salary_record: { amount: "80000", currency: "USD", effective_date: Date.current.iso8601 } },
+             headers: csrf_headers,
+             as: :json
+
+        assert_response :unprocessable_entity
+        assert response.parsed_body.dig("errors", "employee").present?
+        assert_equal [ previous_record.id ], @employee.salary_records.pluck(:id)
+      end
+
       test "returns not found for an unknown employee" do
         sign_in
 

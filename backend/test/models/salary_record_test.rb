@@ -26,6 +26,14 @@ class SalaryRecordTest < ActiveSupport::TestCase
     assert_includes record.errors.attribute_names, :amount
   end
 
+  test "rejects new salary records for former employees" do
+    employee = create_employee(status: "terminated")
+    record = employee.salary_records.new(amount: "72000", currency: "USD", effective_date: Date.current)
+
+    assert_not record.valid?
+    assert_includes record.errors[:employee], "is a former employee; reactivate them before recording a new salary"
+  end
+
   test "rejects amounts that exceed the database precision or scale" do
     employee = create_employee
     excessive_value = employee.salary_records.new(amount: "1000000000000000", currency: "USD", effective_date: Date.current)

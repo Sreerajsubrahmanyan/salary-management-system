@@ -11,10 +11,17 @@ class SalaryRecord < ApplicationRecord
   validates :effective_date, presence: true
   validates :effective_date, uniqueness: { scope: :employee_id }
   validate :end_date_is_not_before_effective_date
+  validate :employee_is_not_terminated, on: :create
   validate :amount_fits_storage_precision
   validate :date_range_does_not_overlap, if: -> { employee_id.present? && effective_date.present? }
 
   private
+
+  def employee_is_not_terminated
+    return unless employee&.status == "terminated"
+
+    errors.add(:employee, "is a former employee; reactivate them before recording a new salary")
+  end
 
   def amount_fits_storage_precision
     raw_amount = amount_before_type_cast

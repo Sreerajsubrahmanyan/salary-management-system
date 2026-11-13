@@ -329,9 +329,13 @@ function EmployeeProfile({ employeeNumber, onBack, onEdit, onSalarySaved }: Prof
         </div>
         <div className="profile-actions">
           <StatusTag status={employee.status} />
-          <button className="salary-change-button" type="button" onClick={() => setAddingSalary((visible) => !visible)}>
-            {addingSalary ? 'Close salary form' : employee.current_salary ? 'Record salary change' : 'Set first salary'}
-          </button>
+          {employee.status === 'terminated' ? (
+            <span className="salary-change-unavailable">New salary entries are closed for former employees.</span>
+          ) : (
+            <button className="salary-change-button" type="button" onClick={() => setAddingSalary((visible) => !visible)}>
+              {addingSalary ? 'Close salary form' : employee.current_salary ? 'Record salary change' : 'Set first salary'}
+            </button>
+          )}
           <button className="edit-person-button" type="button" onClick={() => onEdit(employee)}>Edit record <span aria-hidden="true">↗</span></button>
         </div>
       </div>
