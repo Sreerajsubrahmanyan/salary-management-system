@@ -14,13 +14,13 @@ Implemented: protected HR sessions, employee directory and profile APIs/UI, per-
 
 ## Live recruiter demo
 
-The public demo login has HR manager access to fictional employee and salary data:
+The app is deployed on Render. The public demo login has HR manager access to fictional employee and salary data:
 
 - App: [Salary Management System](https://salary-management-frontend-cbth.onrender.com)
 - Email: `demo.hr@example.com`
 - Password: `demo_example@123`
 
-This shared account is intentionally public for recruiter access. Do not use it with real employee data.
+This shared account is intentionally public for recruiter access. Do not use it with real employee data. The Render services use the free tier: web services can sleep when idle, and the PostgreSQL database is scheduled to expire on **November 18, 2026**. Upgrade or export the database before then to retain the live data. See the [deployment guide](docs/deployment.md) for details.
 
 ## Development setup
 
@@ -69,4 +69,4 @@ cd frontend && npm test && npm run build && npm run lint
 - [Backend API and local setup](backend/README.md)
 - [Render deployment guide](docs/deployment.md)
 
-The commit history is organized into small implementation steps. The live Render environment and video walkthrough are release tasks; no production deployment is currently claimed.
+The commit history is organized into small implementation steps. The live Render deployment is available at the link above; a concise video walkthrough remains a release artifact.

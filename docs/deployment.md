@@ -14,9 +14,19 @@ The recruiter login is intentionally public and has HR manager access to the fic
 
 The service names determine the default Render hostnames. If you rename `salary-management-api`, update the API destination under the frontend's `/api/*` rewrite in `render.yaml` to the API's actual public URL.
 
+## Current live deployment
+
+- Frontend: [salary-management-frontend-cbth.onrender.com](https://salary-management-frontend-cbth.onrender.com)
+- Rails API: [salary-management-api-x3bt.onrender.com](https://salary-management-api-x3bt.onrender.com)
+- PostgreSQL service: `salary-management-db`
+- Recruiter demo email: `demo.hr@example.com`
+- Recruiter demo password: `demo_example@123`
+
+The public demo account is created by `render:bootstrap` after the commit adding it is deployed. The separate `RENDER_HR_EMAIL` account is the private operator login; keep its password in Render and do not share it with recruiters.
+
 ## Free plan limits
 
-The Blueprint uses free services to avoid provisioning paid resources by default. Free web services spin down after inactivity, so the first page load can take about a minute. Free Render Postgres expires 30 days after creation, has no backups, and must be upgraded before expiry to retain its data. For a recruiter link intended to stay available, change the database plan from `free` to a paid plan such as `basic-256mb` before creating the Blueprint. Review Render’s current [free instance limits](https://render.com/docs/free) and [Postgres plans](https://render.com/docs/postgresql-creating-connecting) before choosing.
+The current free PostgreSQL database is scheduled to expire on **November 18, 2026**. Upgrade it or export the data before that date if you need to retain the live employee records. The free web services can also spin down while idle, so the first request after inactivity may take about a minute. For a continuously available recruiter demo, use service plans that do not sleep and a database plan that does not expire. Review Render’s current [free instance limits](https://render.com/docs/free) and [Postgres plans](https://render.com/docs/postgresql-creating-connecting) before choosing.
 
 ## Updates and troubleshooting
 
