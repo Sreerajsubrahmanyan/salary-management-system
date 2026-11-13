@@ -12,7 +12,11 @@ class Employee < ApplicationRecord
   validates :status, inclusion: { in: STATUSES }
 
   def current_salary_record
-    salary_records.current.first
+    if association(:salary_records).loaded?
+      salary_records.find { |record| record.end_date.nil? && record.effective_date <= Date.current }
+    else
+      salary_records.current.first
+    end
   end
 
   private

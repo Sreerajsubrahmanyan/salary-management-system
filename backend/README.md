@@ -5,6 +5,8 @@ Rails 8.1 JSON API backed by PostgreSQL. This scaffold exposes:
 - `GET /up` — Rails framework health check.
 - `GET /api/v1/health` — versioned JSON API health response (`{"status":"ok"}`).
 - `GET`, `POST`, and `DELETE /api/v1/session` — retrieve the CSRF token/current user, sign in, and sign out.
+- `GET /api/v1/employees` — authenticated, filtered, paginated employee directory (`q`, `country`, `department`, `status`, `page`, `per_page`).
+- `POST /api/v1/employees`, `GET /api/v1/employees/:employee_number`, `PATCH /api/v1/employees/:employee_number` — authenticated employee management; profile responses include dated salary history.
 
 ## Local development
 
