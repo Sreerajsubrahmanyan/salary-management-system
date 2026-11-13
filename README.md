@@ -10,7 +10,7 @@ A salary management workspace for an HR Manager to maintain employee and dated c
 
 ## Current status
 
-Implemented: protected HR sessions, employee directory and profile APIs/UI, per-employee salary history graph, dated salary-history API and salary-change entry UI, 10,000 synthetic employee seed, and a currency-separated salary analytics dashboard with filtered CSV export. Still in progress: broader UI and end-to-end coverage, production deployment, and the short demo video. See the [requirements and delivery status](docs/requirements.md) and [implementation plan](docs/implementation-plan.md).
+Implemented: protected HR sessions, employee directory and profile APIs/UI, per-employee salary history graph, dated salary-history API and salary-change entry UI, 10,000 synthetic employee seed, and a currency-separated salary analytics dashboard with filtered CSV export. A Render Blueprint is prepared; the live services still need to be created in a Render account. See the [requirements and delivery status](docs/requirements.md), [implementation plan](docs/implementation-plan.md), and [Render deployment guide](docs/deployment.md).
 
 ## Development setup
 
@@ -57,5 +57,6 @@ cd frontend && npm test && npm run build && npm run lint
 - [Incremental implementation plan](docs/implementation-plan.md)
 - [AI-assisted development notes](docs/ai-development-notes.md)
 - [Backend API and local setup](backend/README.md)
+- [Render deployment guide](docs/deployment.md)
 
-The commit history is organized into small implementation steps. The deployed environment and video walkthrough are release tasks; no production deployment is currently claimed.
+The commit history is organized into small implementation steps. The live Render environment and video walkthrough are release tasks; no production deployment is currently claimed.
