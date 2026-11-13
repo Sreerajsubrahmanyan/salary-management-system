@@ -17,6 +17,14 @@ bin/rails server -p 3001
 
 PostgreSQL must be available using the development settings in `config/database.yml`. Keep local credentials out of commits and use environment/deployment secrets for non-local environments.
 
+Load the deterministic synthetic assessment dataset with:
+
+```sh
+bin/rails db:seed
+```
+
+This upserts `DEMO-00001` through `DEMO-10000` and two dated salary periods per employee. It uses fictional names and reserved `.test` email addresses; do not treat the data as real employee information.
+
 ## Tests
 
 Run the Rails test suite with:

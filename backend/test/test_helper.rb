@@ -7,9 +7,19 @@ module ActiveSupport
     # Run tests in parallel with specified workers
     parallelize(workers: :number_of_processors)
 
-    # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
-    fixtures :all
+    def create_employee(attributes = {})
+      defaults = {
+        employee_number: "TEST-#{SecureRandom.hex(6)}",
+        first_name: "Test",
+        last_name: "Employee",
+        country_code: "US",
+        department: "Engineering",
+        job_title: "Tester",
+        status: "active",
+        hire_date: Date.new(2020, 1, 1)
+      }
 
-    # Add more helper methods to be used by all tests here...
+      Employee.create!(defaults.merge(attributes))
+    end
   end
 end

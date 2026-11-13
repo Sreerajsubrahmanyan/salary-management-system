@@ -38,7 +38,7 @@ cd frontend
 npm run dev -- --host 0.0.0.0 --port 5173
 ```
 
-The API currently exposes health endpoints only; employee and salary models are not yet available through application endpoints. API proxying, database seed instructions, and integrated workflow details will be added with their implementation phases. Do not put credentials or production data in the repository.
+The API currently exposes health endpoints only; employee and salary models are not yet available through application endpoints. After database migrations, load the deterministic 10,000-employee demo dataset with `cd backend && bin/rails db:seed`. API proxying and integrated workflow details will be added with their implementation phases. Do not put credentials or real employee data in the repository.
 
 ## Checks
 
