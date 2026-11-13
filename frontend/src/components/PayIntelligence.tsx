@@ -5,10 +5,10 @@ import './PayIntelligence.css'
 
 const today = new Date().toISOString().slice(0, 10)
 
-function amount(value: string, currency: string) {
+function amount(value: string, currency: string, maxFractionDigits = 4) {
   const [whole, fraction = ''] = value.split('.')
   const grouped = whole.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-  const decimals = fraction.replace(/0+$/, '')
+  const decimals = fraction.slice(0, maxFractionDigits).replace(/0+$/, '')
   return `${currency} ${grouped}${decimals ? `.${decimals}` : ''}`
 }
 
@@ -70,7 +70,7 @@ export function PayIntelligence() {
         <div className="pay-rows">
           {result.data.map((row, index) => <article className="pay-row" key={`${row.group_value}-${row.currency}`}>
             <span className="pay-row-index">{String(index + 1).padStart(2, '0')}</span>
-            <div className="pay-row-label"><strong>{row.group_value}</strong><span>{row.employee_count.toLocaleString()} {row.employee_count === 1 ? 'person' : 'people'} · avg. {amount(row.average_salary, row.currency)}</span></div>
+            <div className="pay-row-label"><div className="pay-row-title"><strong>{row.group_value}</strong><span className="pay-currency-tag">{row.currency}</span></div><span>{row.employee_count.toLocaleString()} {row.employee_count === 1 ? 'person' : 'people'} · avg. ≈ {amount(row.average_salary, row.currency, 2)}</span></div>
             <div className="pay-row-track" aria-label={`${Math.round(Number(row.total_salary) / max * 100)} percent of largest group`}><span style={{ width: `${Math.max(3, Number(row.total_salary) / max * 100)}%` }} /></div>
             <strong className="pay-row-total">{amount(row.total_salary, row.currency)}</strong>
           </article>)}

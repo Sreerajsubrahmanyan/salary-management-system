@@ -36,6 +36,8 @@
 .pay-row-index { color:#b35b42; font-family:var(--serif); font-size:19px; }
 .pay-row-label { display:grid; gap:5px; }
 .pay-row-label strong { color:var(--ink); font-family:var(--serif); font-size:19px; font-weight:400; }
+.pay-row-title { display:flex; align-items:center; gap:9px; }
+.pay-row-label .pay-currency-tag { padding:3px 5px; border:1px solid #c8d2d1; color:#466477; font-size:7px; font-weight:700; letter-spacing:.1em; }
 .pay-row-label span { color:var(--ink-soft); font-size:9px; }
 .pay-row-track { height:5px; overflow:hidden; background:#dfded1; }
 .pay-row-track span { height:100%; display:block; background:#718e9b; transition:width 400ms ease; }
