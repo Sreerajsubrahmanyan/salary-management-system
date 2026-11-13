@@ -1,34 +1,34 @@
 # Salary Management System — Requirements
 
-## Product goal
+## Goal and user
 
-Replace ACME's spreadsheet-based salary management with a web application that lets HR manage salary records for 10,000 employees across countries and answer practical questions about how the organization pays people.
+Replace ACME’s spreadsheet-based salary records with a secure web workspace for its HR Manager to maintain pay history for 10,000 employees in multiple countries and answer questions about how the organization pays people.
 
-## User persona
+## Scope and features
 
-**HR Manager:** maintains employee and compensation information, needs reliable edits and a quick way to find employees and understand pay by country, department, role, or other useful attributes. The manager should be able to trust that changes are validated and that historical compensation is not silently lost.
+- HR Manager sign-in and protected access to employee and pay information.
+- Create, search, filter, view, and update employee profiles in a paginated directory.
+- Record compensation by amount, currency, and effective date; preserve prior records and show which salary applies on a given date.
+- Summarize headcount, total pay, and average pay by country, department, or role. Keep aggregates separate by currency; never imply an exchange-rate conversion.
+- Seed 10,000 deterministic synthetic employees with varied countries, departments, statuses, and dated salary records.
+- Provide responsive, accessible UI states and clear validation, loading, empty, and error feedback.
 
-## Scope and functional requirements
+## Quality requirements
 
-The assessment delivers a usable, deployed single-organization HR tool with a concise demo video. HR can authenticate; search/filter/page through employees; view and edit profiles; create dated salary records while retaining history; and inspect basic headcount and salary summaries by country, department, or role. Employee and salary inputs are validated, and the development seed creates 10,000 representative employees. Reports identify currency and never combine unlike currencies.
-
-## Non-functional requirements
-
-Support 10,000 employees with bounded server-side queries and appropriate indexes. Store money as exact decimal amounts with explicit currency. Keep responsibilities separated, APIs consistent, and tests fast and deterministic. Protect salary data with authenticated access, secure transport/storage configuration, and redacted logs. Provide accessible, responsive screens with clear loading, empty, and error states.
+Use React with TypeScript, Rails API, and PostgreSQL. Validate at the server and preserve exact decimal amounts. Use bounded, indexed, server-side queries and SQL aggregation. Protect endpoints with an HR session, CSRF protection, secure cookies, and production HTTPS. Keep code structured, test core behavior with fast deterministic tests, and maintain an incremental, reviewable commit history.
 
 ## Deliberately out of scope
 
-- **Payroll calculation, payslips, tax, deductions, and payment execution:** these require jurisdiction-specific rules and integrations beyond salary record management.
-- **Currency conversion and cross-currency totals:** rates and valuation dates introduce financial assumptions; keep comparisons currency-specific until specified.
-- **Employee self-service, recruitment, performance, benefits, and leave:** they are separate HR workflows and do not solve the stated salary-data problem.
-- **Complex multi-tenant administration, granular custom roles, and approval workflows:** the assessment identifies one organization and an HR Manager; add these only if real authorization needs emerge.
-- **Bulk spreadsheet import/export in the first release:** spreadsheet migration is a useful follow-on, but validation and safe error recovery should be designed after the core employee and salary flows work.
+- Payroll calculation, payslips, taxes, deductions, and payment execution: these need jurisdiction-specific rules and payment integrations.
+- Currency conversion: rates and valuation dates require explicit financial assumptions.
+- Employee self-service and unrelated HR workflows such as hiring, benefits, performance, and leave.
+- Multi-tenant administration, custom role management, and approval chains: the prompt defines one organization and one HR Manager persona.
+- Bulk spreadsheet import/export in the first release: safe mapping, validation, and recovery should follow a proven core workflow.
 
-## Acceptance criteria
+## Acceptance and submission
 
-- An authenticated HR Manager can create, view, update, and search employees and manage dated salary records.
-- Salary history remains available after a change, and the current compensation is unambiguous.
-- Filters and summaries return correct results for a 10,000-employee seed dataset and never combine different currencies as if equivalent.
-- Invalid input and unauthorized access are rejected with useful responses; sensitive data is not exposed through public routes.
-- Core domain and API behavior has fast, deterministic automated tests, and the UI covers loading, empty, error, and successful flows.
-- The repository documents setup, architecture, and incremental implementation; the final system is deployed and has a concise demo video.
+An authenticated HR Manager can maintain employee profiles and dated salary records, inspect salary history, search the 10,000-person seed, and get correct currency-separated summaries. Invalid input and anonymous requests are rejected. Automated tests cover core domain/API/UI behavior, including failure and empty states. The repository includes this one-page requirements brief, architecture and planning artifacts, setup instructions, and an incremental commit history. Final submission also includes a deployed, verified application and a concise demo video.
+
+## Current delivery status (2026-11-13)
+
+Implemented: Rails/PostgreSQL APIs, HR authentication, 10,000-person seed, employee directory/profile UI, and currency-aware pay report UI. Remaining before full acceptance: salary-change entry in the UI, broader UI failure/empty-flow coverage and end-to-end smoke coverage, production deployment verification, and demo video.
