@@ -9,7 +9,9 @@ Rails.application.routes.draw do
     namespace :v1 do
       get "health", to: "health#show"
       resource :session, only: %i[show create destroy], controller: "sessions"
-      resources :employees, param: :employee_number, only: %i[index show create update]
+      resources :employees, param: :employee_number, only: %i[index show create update] do
+        resources :salary_records, only: %i[index create]
+      end
     end
   end
 

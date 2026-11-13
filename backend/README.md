@@ -7,6 +7,9 @@ Rails 8.1 JSON API backed by PostgreSQL. This scaffold exposes:
 - `GET`, `POST`, and `DELETE /api/v1/session` — retrieve the CSRF token/current user, sign in, and sign out.
 - `GET /api/v1/employees` — authenticated, filtered, paginated employee directory (`q`, `country`, `department`, `status`, `page`, `per_page`).
 - `POST /api/v1/employees`, `GET /api/v1/employees/:employee_number`, `PATCH /api/v1/employees/:employee_number` — authenticated employee management; profile responses include dated salary history.
+- `GET /api/v1/employees/:employee_number/salary_records`, `POST /api/v1/employees/:employee_number/salary_records` — read salary history and record a new effective-dated salary.
+
+Recording a salary change closes the prior open period on the day before the new effective date in the same transaction. A future-dated change leaves the current salary in effect until its start date; invalid changes leave existing history untouched. Reports and totals will remain currency-specific.
 
 ## Local development
 

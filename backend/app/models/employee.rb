@@ -13,7 +13,9 @@ class Employee < ApplicationRecord
 
   def current_salary_record
     if association(:salary_records).loaded?
-      salary_records.find { |record| record.end_date.nil? && record.effective_date <= Date.current }
+      salary_records.find do |record|
+        record.effective_date <= Date.current && (record.end_date.nil? || record.end_date >= Date.current)
+      end
     else
       salary_records.current.first
     end

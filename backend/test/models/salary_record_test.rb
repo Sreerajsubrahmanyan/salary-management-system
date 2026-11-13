@@ -25,4 +25,15 @@ class SalaryRecordTest < ActiveSupport::TestCase
     assert_not record.valid?
     assert_includes record.errors.attribute_names, :amount
   end
+
+  test "rejects amounts that exceed the database precision or scale" do
+    employee = create_employee
+    excessive_value = employee.salary_records.new(amount: "1000000000000000", currency: "USD", effective_date: Date.current)
+    excessive_scale = employee.salary_records.new(amount: "1.23456", currency: "USD", effective_date: Date.current)
+
+    assert_not excessive_value.valid?
+    assert_not excessive_scale.valid?
+    assert_includes excessive_value.errors.attribute_names, :amount
+    assert_includes excessive_scale.errors.attribute_names, :amount
+  end
 end

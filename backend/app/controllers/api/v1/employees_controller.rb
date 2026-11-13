@@ -64,14 +64,7 @@ module Api
       end
 
       def salary_json(record)
-        return unless record
-
-        {
-          amount: record.amount.to_s("F"),
-          currency: record.currency,
-          effective_date: record.effective_date,
-          end_date: record.end_date
-        }
+        SalaryRecordSerializer.serialize(record)
       end
 
       def render_invalid_parameter(error)
