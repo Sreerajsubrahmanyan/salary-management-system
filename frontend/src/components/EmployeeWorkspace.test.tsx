@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { createEmployee, createSalaryRecord, getEmployee, listEmployees } from '../api/client'
+import { createEmployee, createSalaryRecord, getEmployee, listEmployees, updateEmployee } from '../api/client'
 import type { Employee, EmployeeDirectoryPayload } from '../api/types'
 import { EmployeeWorkspace } from './EmployeeWorkspace'
 
@@ -91,6 +91,25 @@ describe('EmployeeWorkspace', () => {
 
     expect(await screen.findByText('New salary entries are closed for former employees.')).toBeTruthy()
     expect(screen.queryByRole('button', { name: /record salary change/i })).toBeNull()
+  })
+
+  it('returns to the updated employee profile after saving an edit', async () => {
+    const employeeProfile = { ...ada, salary_records: [ada.current_salary!] }
+    const updatedProfile = { ...employeeProfile, department: 'Research' }
+    vi.mocked(getEmployee)
+      .mockResolvedValueOnce({ data: employeeProfile })
+      .mockResolvedValueOnce({ data: updatedProfile })
+    vi.mocked(updateEmployee).mockResolvedValue({ data: updatedProfile })
+    render(<EmployeeWorkspace />)
+    fireEvent.click(await screen.findByRole('button', { name: /Ada Lovelace/ }))
+    fireEvent.click(await screen.findByRole('button', { name: /edit record/i }))
+    fireEvent.change(screen.getByLabelText('Department'), { target: { value: 'Research' } })
+    fireEvent.click(screen.getByRole('button', { name: /save changes/i }))
+
+    await waitFor(() => expect(updateEmployee).toHaveBeenCalledWith('DEMO-00001', expect.objectContaining({ department: 'Research' })))
+    expect(await screen.findByRole('heading', { name: /Ada/ })).toBeTruthy()
+    expect(await screen.findByText('Research')).toBeTruthy()
+    await waitFor(() => expect(getEmployee).toHaveBeenCalledTimes(2))
   })
 
   it('creates a new employee and returns to the refreshed register', async () => {

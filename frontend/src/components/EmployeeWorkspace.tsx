@@ -54,8 +54,8 @@ export function EmployeeWorkspace() {
       <EmployeeForm
         employee={view.employee}
         onCancel={() => setView(view.employee ? { type: 'profile', employeeNumber: view.employee.employee_number } : { type: 'directory' })}
-        onSaved={() => {
-          setView({ type: 'directory' })
+        onSaved={(employeeNumber) => {
+          setView(employeeNumber ? { type: 'profile', employeeNumber } : { type: 'directory' })
           setRefreshKey((key) => key + 1)
         }}
       />
@@ -454,7 +454,7 @@ function SalaryChangeForm({ employee, onCancel, onSaved }: SalaryChangeFormProps
 type FormProps = {
   employee: Employee | null
   onCancel: () => void
-  onSaved: () => void
+  onSaved: (employeeNumber?: string) => void
 }
 
 function EmployeeForm({ employee, onCancel, onSaved }: FormProps) {
@@ -495,9 +495,13 @@ function EmployeeForm({ employee, onCancel, onSaved }: FormProps) {
     }
 
     try {
-      if (employee) await updateEmployee(employee.employee_number, payload)
-      else await createEmployee(payload)
-      onSaved()
+      if (employee) {
+        const { data } = await updateEmployee(employee.employee_number, payload)
+        onSaved(data.employee_number)
+      } else {
+        await createEmployee(payload)
+        onSaved()
+      }
     } catch (caughtError) {
       if (caughtError instanceof ApiError && caughtError.errors) setErrors(caughtError.errors)
       setMessage(caughtError instanceof Error ? caughtError.message : 'The record could not be saved.')
