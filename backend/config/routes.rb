@@ -12,6 +12,9 @@ Rails.application.routes.draw do
       resources :employees, param: :employee_number, only: %i[index show create update] do
         resources :salary_records, only: %i[index create]
       end
+      namespace :reports do
+        get "pay", to: "pay#index"
+      end
     end
   end
 

@@ -3,7 +3,8 @@ class SalaryRecord < ApplicationRecord
 
   belongs_to :employee
 
-  scope :current, -> { where("effective_date <= ? AND (end_date IS NULL OR end_date >= ?)", Date.current, Date.current) }
+  scope :effective_on, ->(date) { where("effective_date <= ? AND (end_date IS NULL OR end_date >= ?)", date, date) }
+  scope :current, -> { effective_on(Date.current) }
 
   validates :amount, numericality: { greater_than: 0, less_than_or_equal_to: MAX_AMOUNT }
   validates :currency, format: { with: /\A[A-Z]{3}\z/ }
