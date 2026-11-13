@@ -24,7 +24,7 @@ The frontend is a separately developed single-page application. Rails owns busin
 ## Database design proposal
 
 - `users`: email (unique), password digest, role, timestamps. Seed only non-production credentials and document them clearly.
-- `employees`: stable employee identifier (unique), name, email (unique if the organization guarantees it), country code, department, job title, status, hire date, timestamps. Index identifier, country, department, status, and fields used for search.
+- `employees`: stable employee identifier (unique), name, optional email (normalized and unique when present), country code, department, job title, status, hire date, timestamps. Index the identifier and common filters. The current substring search uses `ILIKE`; consider PostgreSQL trigram indexes only if query plans at the target dataset show they are needed.
 - `salary_records`: employee foreign key, amount (`numeric`, fixed precision), ISO currency code, effective date, optional end date, timestamps. Index employee/effective date and common reporting dimensions. Enforce positive amount and valid date ranges in the model/database where practical.
 
 Use an append/history model: a salary change ends the active record and creates a new dated row in one transaction. Define overlap rules explicitly and test them. Country and currency are separate: neither a country's currency nor an exchange rate should be inferred silently. Avoid storing a derived current salary on `employees` until query evidence justifies a safely maintained cache.
@@ -37,8 +37,8 @@ Version routes under `/api/v1`. Return JSON with consistent validation errors an
 | --- | --- |
 | `POST /api/v1/session`, `DELETE /api/v1/session`, `GET /api/v1/session` | Sign in, sign out, and retrieve current HR user |
 | `GET /api/v1/employees?q=&country=&department=&status=&page=&per_page=` | Filtered, paginated directory with current compensation summary |
-| `POST /api/v1/employees`, `GET /api/v1/employees/:id`, `PATCH /api/v1/employees/:id` | Create and maintain employee profile |
-| `GET /api/v1/employees/:id/salary_records`, `POST /api/v1/employees/:id/salary_records` | Read history and record a salary change |
+| `POST /api/v1/employees`, `GET /api/v1/employees/:employee_number`, `PATCH /api/v1/employees/:employee_number` | Create and maintain employee profile |
+| `GET /api/v1/employees/:employee_number/salary_records`, `POST /api/v1/employees/:employee_number/salary_records` | Read history and record a salary change |
 | `GET /api/v1/reports/pay?group_by=country|department|job_title&currency=&...` | Bounded aggregate counts and pay statistics by currency/group |
 
 Use stable employee IDs, parameter allowlists, bounded `per_page`, and explicit sort options. Reports should expose the currency for each aggregate. Avoid returning the full employee dataset for client-side filtering.

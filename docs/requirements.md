@@ -27,7 +27,7 @@ Use React with TypeScript, Rails API, and PostgreSQL. Validate at the server and
 - Currency conversion: rates and valuation dates require explicit financial assumptions.
 - Employee self-service and unrelated HR workflows such as hiring, benefits, performance, and leave.
 - Multi-tenant administration, custom role management, and approval chains: the prompt defines one organization and one HR Manager persona.
-- Bulk spreadsheet import/export in the first release: safe mapping, validation, and recovery should follow a proven core workflow.
+- Bulk employee spreadsheet import and full-directory export in the first release: safe mapping, validation, and recovery should follow a proven core workflow. Filtered aggregate report CSV remains in scope.
 
 ## Acceptance and submission
 
@@ -35,4 +35,4 @@ An authenticated HR Manager can maintain employee profiles and dated salary reco
 
 ## Current delivery status (2026-11-13)
 
-Implemented: Rails/PostgreSQL APIs, HR authentication, 10,000-person seed, employee directory/profile and salary-change UI, and currency-aware pay report UI. Remaining before full acceptance: broader UI failure/empty-flow coverage and end-to-end smoke coverage, production deployment verification, and demo video.
+Implemented: Rails/PostgreSQL APIs, HR authentication, 10,000-person seed, employee directory/profile and dated salary-change UI, per-employee salary history graphs, salary analytics with headcount/median/range, status and date filters, and filtered CSV export. New salary entries are blocked for former employees. Remaining before full acceptance: broader UI failure/empty-flow coverage and end-to-end smoke coverage, production deployment verification, and demo video.
