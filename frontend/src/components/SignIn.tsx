@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { signIn } from '../api/client'
 import type { SessionUser } from '../api/types'
 import { BrandMark } from './BrandMark'
+import './SignIn.css'
 
 type SignInProps = {
   notice?: string
@@ -38,17 +39,17 @@ export function SignIn({ notice, onSignedIn }: SignInProps) {
   }
 
   return (
-    <main className="auth-page">
+    <main className="auth-page auth-page-v2">
       <section className="brand-panel" aria-labelledby="brand-heading">
         <header className="brand-lockup">
           <BrandMark />
-          <span className="brand-edition">The compensation office · Vol. 01</span>
+          <span className="brand-edition">PEOPLE OPERATIONS / 2026</span>
         </header>
 
         <div className="brand-copy">
-          <p className="eyebrow">A better view of work</p>
-          <h1 id="brand-heading">Pay, kept<br />in <em>good order.</em></h1>
-          <p>One considered place for the people behind every number—and the decisions that shape how they are paid.</p>
+          <p className="eyebrow">Compensation, made legible</p>
+          <h1 id="brand-heading">Know what<br />your people<br /><em>are paid.</em></h1>
+          <p>One secure workspace to understand your people, their pay, and every change in between.</p>
         </div>
 
         <div className="ledger-art" role="img" aria-label="Illustration of a compensation ledger">
@@ -66,7 +67,7 @@ export function SignIn({ notice, onSignedIn }: SignInProps) {
               <span className="ledger-row-value">{row.value}</span>
             </div>
           ))}
-          <div className="ledger-art-foot micro-label">People are not a spreadsheet cell.</div>
+          <div className="ledger-art-foot micro-label">A clearer picture of pay · Illustration</div>
         </div>
 
         <footer className="panel-footer">
@@ -76,12 +77,12 @@ export function SignIn({ notice, onSignedIn }: SignInProps) {
       </section>
 
       <section className="form-panel" aria-labelledby="signin-heading">
-        <div className="form-topline"><span>Human resources · Secure access</span></div>
+        <div className="form-topline"><span>HR MANAGER ACCESS <i aria-hidden="true">●</i> ENCRYPTED SESSION</span></div>
 
         <div className="signin-card">
-          <p className="form-kicker">Good work starts with good records</p>
-          <h2 id="signin-heading">Come on in.</h2>
-          <p className="signin-intro">Sign in to your organization’s compensation workspace.</p>
+          <p className="form-kicker">Your compensation workspace</p>
+          <h2 id="signin-heading">Welcome<br />back.</h2>
+          <p className="signin-intro">Sign in to open your organization’s pay records and insights.</p>
 
           {notice && <p className="form-notice" role="status">{notice}</p>}
           {error && <p className="form-notice" role="alert">{error}</p>}
