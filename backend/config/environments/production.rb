@@ -43,12 +43,13 @@ Rails.application.configure do
   # Don't log any deprecations.
   config.active_support.report_deprecations = false
 
-  # Replace the default in-process memory cache store with a durable alternative.
-  config.cache_store = :solid_cache_store
+  # The Render deployment uses one managed PostgreSQL database. Keep the
+  # application cache in process rather than requiring a separate cache DB.
+  config.cache_store = :memory_store
 
-  # Replace the default in-process and non-durable queuing backend for Active Job.
-  config.active_job.queue_adapter = :solid_queue
-  config.solid_queue.connects_to = { database: { writing: :queue } }
+  # This app does not currently enqueue background jobs. The async adapter
+  # avoids requiring a separate queue database or worker service.
+  config.active_job.queue_adapter = :async
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
