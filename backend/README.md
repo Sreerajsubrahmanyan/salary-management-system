@@ -1,24 +1,28 @@
-# README
+# Backend
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Rails 8.1 JSON API backed by PostgreSQL. This scaffold exposes:
 
-Things you may want to cover:
+- `GET /up` — Rails framework health check.
+- `GET /api/v1/health` — versioned JSON API health response (`{"status":"ok"}`).
 
-* Ruby version
+## Local development
 
-* System dependencies
+Install dependencies from this directory:
 
-* Configuration
+```sh
+bundle install
+bin/rails db:prepare
+bin/rails server -p 3001
+```
 
-* Database creation
+PostgreSQL must be available using the development settings in `config/database.yml`. Keep local credentials out of commits and use environment/deployment secrets for non-local environments.
 
-* Database initialization
+## Tests
 
-* How to run the test suite
+Run the Rails test suite with:
 
-* Services (job queues, cache servers, search engines, etc.)
+```sh
+bin/rails test
+```
 
-* Deployment instructions
-
-* ...
+The API health request test does not depend on employee data or seeded records. Domain and request coverage will be added alongside each API feature.
