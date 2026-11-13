@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { SessionUser } from '../api/types'
 import { BrandMark } from './BrandMark'
 import { EmployeeWorkspace } from './EmployeeWorkspace'
+import { PayIntelligence } from './PayIntelligence'
 
 type WorkspaceShellProps = {
   user: SessionUser
@@ -11,6 +12,7 @@ type WorkspaceShellProps = {
 export function WorkspaceShell({ user, onSignOut }: WorkspaceShellProps) {
   const [isSigningOut, setIsSigningOut] = useState(false)
   const [signOutError, setSignOutError] = useState<string | null>(null)
+  const [section, setSection] = useState<'people' | 'pay'>('people')
   const initials = user.email.slice(0, 1).toUpperCase()
 
   async function handleSignOut() {
@@ -31,14 +33,14 @@ export function WorkspaceShell({ user, onSignOut }: WorkspaceShellProps) {
         <BrandMark />
         <p className="workspace-nav-label">Your desk</p>
         <nav className="workspace-nav" aria-label="Main navigation">
-          <button className="workspace-nav-item" type="button" aria-current="page">
+          <button className="workspace-nav-item" type="button" aria-current={section === 'people' ? 'page' : undefined} onClick={() => setSection('people')}>
             <span className="workspace-nav-symbol" aria-hidden="true">≋</span>
             <span>People register</span>
           </button>
-          <button className="workspace-nav-item" type="button" disabled aria-disabled="true">
+          <button className="workspace-nav-item" type="button" aria-current={section === 'pay' ? 'page' : undefined} onClick={() => setSection('pay')}>
             <span className="workspace-nav-symbol" aria-hidden="true">◫</span>
             <span>Pay intelligence</span>
-            <span className="workspace-nav-status">NEXT</span>
+            <span className="workspace-nav-status">LIVE</span>
           </button>
         </nav>
         <p className="rail-bottom">A clear record is a fairer conversation.<br />Folio · HR workspace</p>
@@ -46,7 +48,7 @@ export function WorkspaceShell({ user, onSignOut }: WorkspaceShellProps) {
 
       <section className="workspace-main">
         <header className="workspace-topbar">
-          <p>Human resources <span aria-hidden="true">/</span> People register</p>
+          <p>Human resources <span aria-hidden="true">/</span> {section === 'people' ? 'People register' : 'Pay intelligence'}</p>
           <div className="user-menu">
             <span className="user-initials" aria-hidden="true">{initials}</span>
             <span className="user-email">{user.email}</span>
@@ -58,7 +60,7 @@ export function WorkspaceShell({ user, onSignOut }: WorkspaceShellProps) {
 
         {signOutError && <p className="form-notice" role="alert">{signOutError}</p>}
 
-        <EmployeeWorkspace />
+        {section === 'people' ? <EmployeeWorkspace /> : <PayIntelligence />}
       </section>
     </main>
   )

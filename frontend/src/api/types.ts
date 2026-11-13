@@ -61,3 +61,23 @@ export type EmployeePayload = {
 export type EmployeeInput = Omit<Employee, 'current_salary' | 'salary_records'>
 
 export type ValidationErrors = Record<string, string[]>
+
+export type PayReportRow = {
+  group_value: string
+  currency: string
+  employee_count: number
+  total_salary: string
+  average_salary: string
+}
+
+export type PayReportPayload = {
+  data: PayReportRow[]
+  meta: { group_by: 'country' | 'department' | 'job_title'; as_of: string; group_count: number }
+}
+
+export type PayReportFilters = {
+  group_by?: 'country' | 'department' | 'job_title'
+  country?: string
+  currency?: string
+  as_of?: string
+}

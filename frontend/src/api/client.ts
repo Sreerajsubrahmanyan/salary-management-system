@@ -3,6 +3,8 @@ import type {
   EmployeeFilters,
   EmployeeInput,
   EmployeePayload,
+  PayReportFilters,
+  PayReportPayload,
   SessionPayload,
   SignInCredentials,
   ValidationErrors,
@@ -115,4 +117,13 @@ export function updateEmployee(employeeNumber: string, employee: Partial<Employe
     method: 'PATCH',
     body: JSON.stringify({ employee }),
   })
+}
+
+export function getPayReport(filters: PayReportFilters = {}): Promise<PayReportPayload> {
+  const search = new URLSearchParams()
+  Object.entries(filters).forEach(([key, value]) => {
+    if (value !== undefined && value !== '') search.set(key, String(value))
+  })
+  const query = search.toString()
+  return request<PayReportPayload>(`/api/v1/reports/pay${query ? `?${query}` : ''}`)
 }
