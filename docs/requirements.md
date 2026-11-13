@@ -31,4 +31,4 @@ An authenticated HR Manager can maintain employee profiles and dated salary reco
 
 ## Current delivery status (2026-11-13)
 
-Implemented: Rails/PostgreSQL APIs, HR authentication, 10,000-person seed, employee directory/profile UI, and currency-aware pay report UI. Remaining before full acceptance: salary-change entry in the UI, broader UI failure/empty-flow coverage and end-to-end smoke coverage, production deployment verification, and demo video.
+Implemented: Rails/PostgreSQL APIs, HR authentication, 10,000-person seed, employee directory/profile and salary-change UI, and currency-aware pay report UI. Remaining before full acceptance: broader UI failure/empty-flow coverage and end-to-end smoke coverage, production deployment verification, and demo video.

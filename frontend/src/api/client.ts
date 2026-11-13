@@ -6,6 +6,8 @@ import type {
   PayReportFilters,
   PayReportPayload,
   SessionPayload,
+  SalaryRecord,
+  SalaryRecordInput,
   SignInCredentials,
   ValidationErrors,
 } from './types'
@@ -116,6 +118,13 @@ export function updateEmployee(employeeNumber: string, employee: Partial<Employe
   return request<EmployeePayload>(`/api/v1/employees/${encodeURIComponent(employeeNumber)}`, {
     method: 'PATCH',
     body: JSON.stringify({ employee }),
+  })
+}
+
+export function createSalaryRecord(employeeNumber: string, salaryRecord: SalaryRecordInput): Promise<{ data: SalaryRecord }> {
+  return request<{ data: SalaryRecord }>(`/api/v1/employees/${encodeURIComponent(employeeNumber)}/salary_records`, {
+    method: 'POST',
+    body: JSON.stringify({ salary_record: salaryRecord }),
   })
 }
 

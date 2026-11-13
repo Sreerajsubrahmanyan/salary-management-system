@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from 'react'
-import { ApiError, createEmployee, getEmployee, listEmployees, updateEmployee } from '../api/client'
-import type { Employee, EmployeeFilters, EmployeeInput, SalaryRecord } from '../api/types'
+import { ApiError, createEmployee, createSalaryRecord, getEmployee, listEmployees, updateEmployee } from '../api/client'
+import type { Employee, EmployeeFilters, EmployeeInput, SalaryRecord, SalaryRecordInput } from '../api/types'
 import './EmployeeWorkspace.css'
 
 type ViewState =
@@ -39,9 +39,11 @@ export function EmployeeWorkspace() {
   if (view.type === 'profile') {
     return (
       <EmployeeProfile
+        key={refreshKey}
         employeeNumber={view.employeeNumber}
         onBack={() => setView({ type: 'directory' })}
         onEdit={(employee) => setView({ type: 'form', employee })}
+        onSalarySaved={() => setRefreshKey((key) => key + 1)}
       />
     )
   }
@@ -279,9 +281,11 @@ type ProfileProps = {
   employeeNumber: string
   onBack: () => void
   onEdit: (employee: Employee) => void
+  onSalarySaved: () => void
 }
 
-function EmployeeProfile({ employeeNumber, onBack, onEdit }: ProfileProps) {
+function EmployeeProfile({ employeeNumber, onBack, onEdit, onSalarySaved }: ProfileProps) {
+  const [addingSalary, setAddingSalary] = useState(false)
   const [loadedRecord, setLoadedRecord] = useState<{ employeeNumber: string; employee: Employee } | null>(null)
   const [loadFailure, setLoadFailure] = useState<{ employeeNumber: string; message: string } | null>(null)
   const employee = loadedRecord?.employeeNumber === employeeNumber ? loadedRecord.employee : null
@@ -324,9 +328,14 @@ function EmployeeProfile({ employeeNumber, onBack, onEdit }: ProfileProps) {
         </div>
         <div className="profile-actions">
           <StatusTag status={employee.status} />
+          <button className="salary-change-button" type="button" onClick={() => setAddingSalary((visible) => !visible)}>
+            {addingSalary ? 'Close salary form' : employee.current_salary ? 'Record salary change' : 'Set first salary'}
+          </button>
           <button className="edit-person-button" type="button" onClick={() => onEdit(employee)}>Edit record <span aria-hidden="true">↗</span></button>
         </div>
       </div>
+
+      {addingSalary && <SalaryChangeForm employee={employee} onCancel={() => setAddingSalary(false)} onSaved={onSalarySaved} />}
 
       <div className="profile-facts">
         <div><span>Employee number</span><strong>{employee.employee_number}</strong></div>
@@ -362,6 +371,76 @@ function EmployeeProfile({ employeeNumber, onBack, onEdit }: ProfileProps) {
         </div>
       )}
     </section>
+  )
+}
+
+type SalaryChangeFormProps = {
+  employee: Employee
+  onCancel: () => void
+  onSaved: () => void
+}
+
+function SalaryChangeForm({ employee, onCancel, onSaved }: SalaryChangeFormProps) {
+  const nextOpenRecord = employee.salary_records?.find((record) => record.end_date === null)
+  const minimumDate = nextOpenRecord ? dateAfter(nextOpenRecord.effective_date) : localToday()
+  const [values, setValues] = useState<SalaryRecordInput>(() => ({
+    amount: '',
+    currency: employee.current_salary?.currency ?? nextOpenRecord?.currency ?? '',
+    effective_date: minimumDate > localToday() ? minimumDate : localToday(),
+  }))
+  const [errors, setErrors] = useState<Record<string, string[]>>({})
+  const [message, setMessage] = useState('')
+  const [isSaving, setIsSaving] = useState(false)
+
+  function update<K extends keyof SalaryRecordInput>(key: K, value: SalaryRecordInput[K]) {
+    setValues((current) => ({ ...current, [key]: value }))
+    setErrors((current) => ({ ...current, [key]: [] }))
+  }
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    setErrors({})
+    setMessage('')
+    setIsSaving(true)
+    try {
+      await createSalaryRecord(employee.employee_number, {
+        ...values,
+        amount: values.amount.trim(),
+        currency: values.currency.trim().toUpperCase(),
+      })
+      onSaved()
+    } catch (caughtError) {
+      if (caughtError instanceof ApiError && caughtError.errors) setErrors(caughtError.errors)
+      setMessage(caughtError instanceof Error ? caughtError.message : 'The salary record could not be saved.')
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  return (
+    <form className="salary-change-form" onSubmit={handleSubmit} aria-labelledby="salary-change-title">
+      <div className="salary-change-intro">
+        <p className="workspace-kicker">Compensation update <span className="directory-slash">/</span> New entry</p>
+        <h2 id="salary-change-title">Record a salary change.</h2>
+        <p>The previous open record will end the day before this effective date. Existing history stays intact.</p>
+      </div>
+      {message && <p className="form-notice salary-form-error" role="alert">{message}</p>}
+      <div className="salary-change-fields">
+        <FormField label="Annual salary amount" error={errors.amount?.[0]}>
+          <input value={values.amount} onChange={(event) => update('amount', event.target.value)} inputMode="decimal" placeholder="e.g. 72000.00" required />
+        </FormField>
+        <FormField label="Currency code" error={errors.currency?.[0]}>
+          <input value={values.currency} onChange={(event) => update('currency', event.target.value.toUpperCase())} maxLength={3} placeholder="USD" required />
+        </FormField>
+        <FormField label="Effective date" error={errors.effective_date?.[0]}>
+          <input type="date" value={values.effective_date} min={minimumDate} onChange={(event) => update('effective_date', event.target.value)} required />
+        </FormField>
+      </div>
+      <div className="salary-change-footer">
+        <span>All amounts remain in the selected currency.</span>
+        <div><button className="form-cancel-button" type="button" onClick={onCancel}>Cancel</button><button className="add-person-button" type="submit" disabled={isSaving}>{isSaving ? 'Saving change…' : 'Save salary change'} <span aria-hidden="true">↗</span></button></div>
+      </div>
+    </form>
   )
 }
 
@@ -520,4 +599,10 @@ function formatDate(value: string) {
 function localToday() {
   const today = new Date()
   return [today.getFullYear(), (today.getMonth() + 1).toString().padStart(2, '0'), today.getDate().toString().padStart(2, '0')].join('-')
+}
+
+function dateAfter(value: string) {
+  const [year, month, day] = value.split('-').map(Number)
+  const next = new Date(year, month - 1, day + 1)
+  return [next.getFullYear(), (next.getMonth() + 1).toString().padStart(2, '0'), next.getDate().toString().padStart(2, '0')].join('-')
 }

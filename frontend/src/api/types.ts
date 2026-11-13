@@ -21,6 +21,8 @@ export type SalaryRecord = {
   end_date: string | null
 }
 
+export type SalaryRecordInput = Pick<SalaryRecord, 'amount' | 'currency' | 'effective_date'>
+
 export type Employee = {
   employee_number: string
   first_name: string

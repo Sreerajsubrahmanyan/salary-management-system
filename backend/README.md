@@ -10,7 +10,7 @@ Rails 8.1 JSON API backed by PostgreSQL. This scaffold exposes:
 - `GET /api/v1/employees/:employee_number/salary_records`, `POST /api/v1/employees/:employee_number/salary_records` — read salary history and record a new effective-dated salary.
 - `GET /api/v1/reports/pay?group_by=country|department|job_title` — authenticated pay totals and averages, always separated by currency; supports `country`, `department`, `job_title`, `status`, `currency`, and `as_of` filters.
 
-Recording a salary change closes the prior open period on the day before the new effective date in the same transaction. A future-dated change leaves the current salary in effect until its start date; invalid changes leave existing history untouched. Reports and totals remain currency-specific. The salary-record API exists, but the frontend salary-change workflow is still pending.
+Recording a salary change closes the prior open period on the day before the new effective date in the same transaction. A future-dated change leaves the current salary in effect until its start date; invalid changes leave existing history untouched. The employee profile UI can submit a new dated salary record. Reports and totals remain currency-specific.
 
 ## Local development
 

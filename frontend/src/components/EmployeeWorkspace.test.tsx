@@ -1,11 +1,12 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { createEmployee, getEmployee, listEmployees } from '../api/client'
+import { createEmployee, createSalaryRecord, getEmployee, listEmployees } from '../api/client'
 import type { Employee, EmployeeDirectoryPayload } from '../api/types'
 import { EmployeeWorkspace } from './EmployeeWorkspace'
 
 vi.mock('../api/client', () => ({
   createEmployee: vi.fn(),
+  createSalaryRecord: vi.fn(),
   getEmployee: vi.fn(),
   listEmployees: vi.fn(),
   updateEmployee: vi.fn(),
@@ -58,6 +59,27 @@ describe('EmployeeWorkspace', () => {
     expect(await screen.findByRole('heading', { name: /Ada/ })).toBeTruthy()
     expect(screen.getByText('Salary history')).toBeTruthy()
     expect(screen.getByText('Jan 1, 2024')).toBeTruthy()
+  })
+
+  it('records a dated salary change and reloads the employee ledger', async () => {
+    vi.mocked(getEmployee).mockResolvedValue({
+      data: { ...ada, salary_records: [ada.current_salary!] },
+    })
+    vi.mocked(createSalaryRecord).mockResolvedValue({
+      data: { id: 2, amount: '80000', currency: 'USD', effective_date: '2026-11-14', end_date: null },
+    })
+    render(<EmployeeWorkspace />)
+    fireEvent.click(await screen.findByRole('button', { name: /Ada Lovelace/ }))
+    fireEvent.click(await screen.findByRole('button', { name: 'Record salary change' }))
+
+    fireEvent.change(screen.getByLabelText('Annual salary amount'), { target: { value: '80000' } })
+    fireEvent.change(screen.getByLabelText('Effective date'), { target: { value: '2026-11-14' } })
+    fireEvent.click(screen.getByRole('button', { name: /save salary change/i }))
+
+    await waitFor(() => expect(createSalaryRecord).toHaveBeenCalledWith('DEMO-00001', {
+      amount: '80000', currency: 'USD', effective_date: '2026-11-14',
+    }))
+    await waitFor(() => expect(getEmployee).toHaveBeenCalledTimes(2))
   })
 
   it('creates a new employee and returns to the refreshed register', async () => {
