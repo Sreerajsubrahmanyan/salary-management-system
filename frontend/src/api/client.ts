@@ -1,4 +1,12 @@
-import type { SessionPayload, SignInCredentials } from './types'
+import type {
+  EmployeeDirectoryPayload,
+  EmployeeFilters,
+  EmployeeInput,
+  EmployeePayload,
+  SessionPayload,
+  SignInCredentials,
+  ValidationErrors,
+} from './types'
 
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL ?? '').replace(/\/$/, '')
 let csrfToken: string | undefined
@@ -6,10 +14,12 @@ let sessionRequest: Promise<SessionPayload> | undefined
 
 export class ApiError extends Error {
   readonly status: number
+  readonly errors?: ValidationErrors
 
-  constructor(message: string, status: number) {
+  constructor(message: string, status: number, errors?: ValidationErrors) {
     super(message)
     this.status = status
+    this.errors = errors
     this.name = 'ApiError'
   }
 }
@@ -39,8 +49,13 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   if (!response.ok) {
     const message = isRecord(payload) && typeof payload.error === 'string'
       ? payload.error
-      : `The request failed (${response.status}).`
-    throw new ApiError(message, response.status)
+      : isRecord(payload) && isRecord(payload.errors)
+        ? 'Check the highlighted fields and try again.'
+        : `The request failed (${response.status}).`
+    const errors = isRecord(payload) && isRecord(payload.errors)
+      ? payload.errors as ValidationErrors
+      : undefined
+    throw new ApiError(message, response.status, errors)
   }
 
   if (isRecord(payload) && typeof payload.csrf_token === 'string') {
@@ -73,4 +88,31 @@ export function signIn(credentials: SignInCredentials): Promise<SessionPayload> 
 export async function signOut(): Promise<void> {
   await request<void>('/api/v1/session', { method: 'DELETE' })
   csrfToken = undefined
+}
+
+export function listEmployees(filters: EmployeeFilters = {}): Promise<EmployeeDirectoryPayload> {
+  const search = new URLSearchParams()
+  Object.entries(filters).forEach(([key, value]) => {
+    if (value !== undefined && value !== '') search.set(key, String(value))
+  })
+  const query = search.size > 0 ? `?${search.toString()}` : ''
+  return request<EmployeeDirectoryPayload>(`/api/v1/employees${query}`)
+}
+
+export function getEmployee(employeeNumber: string): Promise<EmployeePayload> {
+  return request<EmployeePayload>(`/api/v1/employees/${encodeURIComponent(employeeNumber)}`)
+}
+
+export function createEmployee(employee: EmployeeInput): Promise<EmployeePayload> {
+  return request<EmployeePayload>('/api/v1/employees', {
+    method: 'POST',
+    body: JSON.stringify({ employee }),
+  })
+}
+
+export function updateEmployee(employeeNumber: string, employee: Partial<EmployeeInput>): Promise<EmployeePayload> {
+  return request<EmployeePayload>(`/api/v1/employees/${encodeURIComponent(employeeNumber)}`, {
+    method: 'PATCH',
+    body: JSON.stringify({ employee }),
+  })
 }

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { SessionUser } from '../api/types'
 import { BrandMark } from './BrandMark'
+import { EmployeeWorkspace } from './EmployeeWorkspace'
 
 type WorkspaceShellProps = {
   user: SessionUser
@@ -30,25 +31,22 @@ export function WorkspaceShell({ user, onSignOut }: WorkspaceShellProps) {
         <BrandMark />
         <p className="workspace-nav-label">Your desk</p>
         <nav className="workspace-nav" aria-label="Main navigation">
-          <div className="workspace-nav-item" aria-current="page">
-            <span className="workspace-nav-symbol" aria-hidden="true">⌂</span>
-            <span>Overview</span>
-          </div>
-          <div className="workspace-nav-item" aria-disabled="true">
+          <button className="workspace-nav-item" type="button" aria-current="page">
             <span className="workspace-nav-symbol" aria-hidden="true">≋</span>
             <span>People register</span>
-          </div>
-          <div className="workspace-nav-item" aria-disabled="true">
+          </button>
+          <button className="workspace-nav-item" type="button" disabled aria-disabled="true">
             <span className="workspace-nav-symbol" aria-hidden="true">◫</span>
             <span>Pay intelligence</span>
-          </div>
+            <span className="workspace-nav-status">NEXT</span>
+          </button>
         </nav>
         <p className="rail-bottom">A clear record is a fairer conversation.<br />Folio · HR workspace</p>
       </aside>
 
       <section className="workspace-main">
         <header className="workspace-topbar">
-          <p>Human resources <span aria-hidden="true">/</span> Overview</p>
+          <p>Human resources <span aria-hidden="true">/</span> People register</p>
           <div className="user-menu">
             <span className="user-initials" aria-hidden="true">{initials}</span>
             <span className="user-email">{user.email}</span>
@@ -60,18 +58,7 @@ export function WorkspaceShell({ user, onSignOut }: WorkspaceShellProps) {
 
         {signOutError && <p className="form-notice" role="alert">{signOutError}</p>}
 
-        <div className="workspace-welcome">
-          <p className="workspace-kicker">Your access is active</p>
-          <h1>Make every<br />pay decision <em>clear.</em></h1>
-          <p className="workspace-lede">
-            This is your compensation office: a considered record of people, pay, and the changes between them.
-          </p>
-
-          <div className="workspace-note">
-            <span className="workspace-note-index">01</span>
-            <p><strong>Your ledger is ready to be explored.</strong>The employee register and pay intelligence views are being connected to this workspace.</p>
-          </div>
-        </div>
+        <EmployeeWorkspace />
       </section>
     </main>
   )
