@@ -21,5 +21,15 @@ module ActiveSupport
 
       Employee.create!(defaults.merge(attributes))
     end
+
+    def create_user(attributes = {})
+      defaults = {
+        email: "hr-#{SecureRandom.hex(6)}@example.test",
+        password: "assessment-password-123",
+        role: "hr_manager"
+      }
+
+      User.create!(defaults.merge(attributes))
+    end
   end
 end

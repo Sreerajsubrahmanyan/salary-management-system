@@ -1,6 +1,6 @@
 # Salary Management System
 
-Web-based salary management for an organization with 10,000 employees across multiple countries. The initial user is the organization's HR Manager, who needs to maintain employee compensation and answer questions about pay. The repository currently contains a versioned API health endpoint and the initial employee and salary-history data model; user workflows are being added incrementally.
+Web-based salary management for an organization with 10,000 employees across multiple countries. The initial user is the organization's HR Manager, who needs to maintain employee compensation and answer questions about pay. The repository currently contains a versioned API health endpoint, HR session authentication, employee and salary-history data models, and a 10,000-employee synthetic seed. Employee workflows and reporting are being added incrementally.
 
 ## Stack
 
