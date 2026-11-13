@@ -68,5 +68,6 @@ cd frontend && npm test && npm run build && npm run lint
 - [AI-assisted development notes](docs/ai-development-notes.md)
 - [Backend API and local setup](backend/README.md)
 - [Render deployment guide](docs/deployment.md)
+- [Recruiter video demo script](docs/video-demo-script.md)
 
-The commit history is organized into small implementation steps. The live Render deployment is available at the link above; a concise video walkthrough remains a release artifact.
+The commit history is organized into small implementation steps. The live Render deployment is available at the link above; the video demo script is ready, and recording the walkthrough remains a release task.
