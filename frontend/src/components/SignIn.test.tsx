@@ -9,6 +9,16 @@ vi.mock('../api/client', () => ({ signIn: vi.fn() }))
 describe('SignIn', () => {
   beforeEach(() => vi.clearAllMocks())
 
+  it('introduces the product as an HR workspace with people and pay context', () => {
+    render(<SignIn onSignedIn={vi.fn()} />)
+
+    expect(screen.getByRole('heading', { name: /people first.*pay, understood/i })).toBeTruthy()
+    expect(screen.getByText('People & pay / Secure access')).toBeTruthy()
+    expect(screen.getByText(/manage employee records and see how your organization pays people/i)).toBeTruthy()
+    expect(screen.getByText('Inside your HR workspace')).toBeTruthy()
+    expect(screen.queryByText(/what belongs in view/i)).toBeNull()
+  })
+
   it('submits credentials and hands the authenticated HR user to the app', async () => {
     const user: SessionUser = { email: 'hr@example.test', role: 'hr_manager' }
     const onSignedIn = vi.fn()

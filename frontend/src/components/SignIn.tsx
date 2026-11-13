@@ -10,9 +10,9 @@ type SignInProps = {
 }
 
 const ledgerRows = [
-  { label: '01 / role', width: '61%', value: 'salary' },
-  { label: '02 / place', width: '79%', value: 'country' },
-  { label: '03 / time', width: '48%', value: 'effective date' },
+  { label: '01 / people', value: 'Employee register' },
+  { label: '02 / pay', value: 'Salary history' },
+  { label: '03 / insight', value: 'Pay reporting' },
 ]
 
 export function SignIn({ notice, onSignedIn }: SignInProps) {
@@ -43,31 +43,23 @@ export function SignIn({ notice, onSignedIn }: SignInProps) {
       <section className="brand-panel" aria-labelledby="brand-heading">
         <header className="brand-lockup">
           <BrandMark />
-          <span className="brand-edition">PEOPLE OPERATIONS / 2026</span>
+          <span className="brand-edition">HR OPERATIONS / 2026</span>
         </header>
 
         <div className="brand-copy">
-          <p className="eyebrow">Compensation, made legible</p>
-          <h1 id="brand-heading">Know what<br />your people<br /><em>are paid.</em></h1>
-          <p>One secure workspace to understand your people, their pay, and every change in between.</p>
+          <p className="eyebrow">A clearer view of your people</p>
+          <h1 id="brand-heading">People first.<br /><em>Pay, understood.</em></h1>
+          <p>A secure HR workspace for your employee register, salary histories, and clear pay reporting.</p>
         </div>
 
-        <div className="ledger-art" role="img" aria-label="Illustration of a compensation ledger">
-          <div className="ledger-art-head">
-            <span className="micro-label">A salary record</span>
-            <span className="micro-label">What belongs in view</span>
-            <span className="micro-label">Index</span>
-          </div>
+        <div className="ledger-art" role="img" aria-label="Employee records, salary history, and HR reporting">
+          <div className="ledger-art-head"><span className="micro-label">Inside your HR workspace</span></div>
           {ledgerRows.map((row) => (
             <div className="ledger-row" key={row.label}>
               <span className="ledger-row-label">{row.label}</span>
-              <span className="ledger-track" aria-hidden="true">
-                <span className="ledger-bar" style={{ width: row.width }} />
-              </span>
               <span className="ledger-row-value">{row.value}</span>
             </div>
           ))}
-          <div className="ledger-art-foot micro-label">A clearer picture of pay · Illustration</div>
         </div>
 
         <footer className="panel-footer">
@@ -80,9 +72,9 @@ export function SignIn({ notice, onSignedIn }: SignInProps) {
         <div className="form-topline"><span>HR MANAGER ACCESS <i aria-hidden="true">●</i> ENCRYPTED SESSION</span></div>
 
         <div className="signin-card">
-          <p className="form-kicker">Your compensation workspace</p>
+          <p className="form-kicker">People &amp; pay / Secure access</p>
           <h2 id="signin-heading">Welcome<br />back.</h2>
-          <p className="signin-intro">Sign in to open your organization’s pay records and insights.</p>
+          <p className="signin-intro">Sign in to manage employee records and see how your organization pays people.</p>
 
           {notice && <p className="form-notice" role="status">{notice}</p>}
           {error && <p className="form-notice" role="alert">{error}</p>}
@@ -138,8 +130,8 @@ export function SignIn({ notice, onSignedIn }: SignInProps) {
         </div>
 
         <footer className="form-footer">
-          <span>Folio · Compensation office</span>
-          <span>For authorized HR use</span>
+          <span>Folio · People &amp; Pay</span>
+          <span>For authorized HR users</span>
         </footer>
       </section>
     </main>
