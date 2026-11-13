@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { getPayReport } from '../api/client'
 import type { PayReportFilters, PayReportPayload } from '../api/types'
+import { buildPayReportCsv } from './payReportCsv'
 import './PayIntelligence.css'
 
 const today = new Date().toISOString().slice(0, 10)
@@ -42,6 +43,26 @@ export function PayIntelligence() {
   }))
   const max = Math.max(1, ...(result?.data.map((row) => Number(row.total_salary)) ?? []))
 
+  function downloadCsv() {
+    if (!result) return
+    const reportFilters: PayReportFilters = {
+      group_by: groupBy,
+      country: country || undefined,
+      currency: currency || undefined,
+      status: status || undefined,
+      as_of: asOf,
+    }
+    const blob = new Blob([buildPayReportCsv(result, reportFilters)], { type: 'text/csv;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `salary-report-${groupBy}-${asOf}.csv`
+    document.body.append(link)
+    link.click()
+    link.remove()
+    window.setTimeout(() => URL.revokeObjectURL(url), 0)
+  }
+
   return (
     <section className="pay-intelligence" aria-labelledby="pay-title">
       <div className="pay-hero">
@@ -67,7 +88,7 @@ export function PayIntelligence() {
         {totals.length ? totals.map((total) => <article className="pay-summary-total" key={total.currency}><span>TOTAL · {total.currency}</span><strong>{amount(String(total.value), total.currency)}</strong><small>Across {count.toLocaleString()} people in view</small></article>) : <article className="pay-summary-total"><span>TOTAL PAYROLL</span><strong>{loading ? 'Reading…' : '—'}</strong><small>Grouped by currency</small></article>}
       </div>
 
-      <div className="pay-breakdown-head"><div><p className="pay-section-label">THE DISTRIBUTION / 01</p><h2>{groupBy === 'job_title' ? 'By role' : `By ${groupBy}`}</h2></div><span>{result?.meta.group_count ?? 0} groups</span></div>
+      <div className="pay-breakdown-head"><div><p className="pay-section-label">THE DISTRIBUTION / 01</p><h2>{groupBy === 'job_title' ? 'By role' : `By ${groupBy}`}</h2></div><div className="pay-breakdown-tools"><span>{result?.meta.group_count ?? 0} groups</span><button type="button" onClick={downloadCsv} disabled={!result || loading || Boolean(error)}>Export CSV <span aria-hidden="true">↗</span></button></div></div>
       {error ? <div className="pay-state" role="alert"><strong>The ledger could not be read.</strong><span>{error}</span><button type="button" onClick={() => setRetry((value) => value + 1)}>Try again ↗</button></div> : loading && !result ? <div className="pay-state">Reading the compensation ledger…</div> : !result?.data.length ? <div className="pay-state">No salary records match these filters. Widen the view to see more.</div> : (
         <div className="pay-rows">
           {result.data.map((row, index) => <article className="pay-row" key={`${row.group_value}-${row.currency}`}>

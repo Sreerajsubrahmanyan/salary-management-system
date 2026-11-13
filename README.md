@@ -10,7 +10,7 @@ A salary management workspace for an HR Manager to maintain employee and dated c
 
 ## Current status
 
-Implemented: protected HR sessions, employee directory and profile APIs/UI, dated salary-history API and salary-change entry UI, 10,000 synthetic employee seed, and currency-separated pay reports with a reporting UI. Still in progress: broader UI and end-to-end coverage, production deployment, and the short demo video. See the [requirements and delivery status](docs/requirements.md) and [implementation plan](docs/implementation-plan.md).
+Implemented: protected HR sessions, employee directory and profile APIs/UI, dated salary-history API and salary-change entry UI, 10,000 synthetic employee seed, and currency-separated pay analytics with filtered CSV export. Still in progress: broader UI and end-to-end coverage, production deployment, and the short demo video. See the [requirements and delivery status](docs/requirements.md) and [implementation plan](docs/implementation-plan.md).
 
 ## Development setup
 
