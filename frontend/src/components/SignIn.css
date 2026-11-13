@@ -40,20 +40,27 @@
 }
 .auth-page-v2 .brand-copy h1 em { color: #72e0c9; font-weight: 500; }
 .auth-page-v2 .brand-copy > p { max-width: 380px; color: #bac8dc; font-size: 13px; line-height: 1.7; }
-.auth-page-v2 .ledger-art { max-width: 600px; padding-top: 38px; }
-.auth-page-v2 .ledger-art-head {
-  grid-template-columns: 1fr;
-  padding-bottom: 12px;
-  border-color: rgb(223 234 248 / 25%);
+.auth-page-v2 .brand-art {
+  width: min(100%, 620px);
+  height: clamp(110px, 19vh, 190px);
+  margin-top: auto;
+  padding-top: 24px;
+  overflow: hidden;
+  opacity: .92;
+}
+.auth-page-v2 .brand-art svg { width: 100%; height: 100%; overflow: visible; }
+.auth-page-v2 .brand-art-thread { fill: none; stroke: #72e0c9; stroke-linecap: round; stroke-width: 1; }
+.auth-page-v2 .brand-art-thread-muted { opacity: .19; stroke-width: .8; }
+.auth-page-v2 .brand-art-thread-focus { stroke: url(#brand-art-gradient); stroke-width: 1.6; }
+.auth-page-v2 .brand-art-orbit { fill: #203a64; stroke: #72e0c9; stroke-width: 1.5; }
+.auth-page-v2 .brand-art-orbit-accent { stroke: #e6a18a; }
+.auth-page-v2 .panel-footer {
+  margin-top: 18px;
+  border-top: 1px solid rgb(223 234 248 / 14%);
+  padding-top: 15px;
   color: #9fb2ca;
+  font-size: 7px;
 }
-.auth-page-v2 .ledger-row {
-  grid-template-columns: minmax(100px, .38fr) 1fr;
-  border-color: rgb(223 234 248 / 13%);
-}
-.auth-page-v2 .ledger-row-label { color: #d8e2ee; font-size: 9px; }
-.auth-page-v2 .ledger-row-value { color: #b7c9de; font-family: var(--sans); font-size: 10px; text-align: left; }
-.auth-page-v2 .panel-footer { border-top: 1px solid rgb(223 234 248 / 14%); padding-top: 15px; color: #9fb2ca; font-size: 7px; }
 .auth-page-v2 .form-panel { min-height: calc(100svh - 44px); padding: 28px 0 18px; justify-content: space-between; }
 .auth-page-v2 .form-topline { justify-content: flex-start; }
 .auth-page-v2 .form-topline span { color: #58708d; font-size: 8px; font-weight: 700; letter-spacing: .12em; }
@@ -103,9 +110,8 @@
   .auth-page-v2 .brand-copy { margin-top: 34px; }
   .auth-page-v2 .brand-copy h1 { font-size: clamp(42px, 12vw, 64px); }
   .auth-page-v2 .brand-copy h1 em { display: inline; }
-  .auth-page-v2 .ledger-art { margin-top: 24px; padding-top: 0; }
-  .auth-page-v2 .ledger-row { min-height: 30px; }
-  .auth-page-v2 .panel-footer { margin-top: 14px; }
+  .auth-page-v2 .brand-art { height: 86px; margin-top: 28px; padding-top: 0; }
+  .auth-page-v2 .panel-footer { margin-top: 20px; }
   .auth-page-v2 .form-panel { min-height: auto; padding: 8px 10px 13px; }
   .auth-page-v2 .form-topline { display: none; }
   .auth-page-v2 .signin-card { margin: 0 auto 14px; padding: 25px 22px; }

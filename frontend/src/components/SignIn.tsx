@@ -9,12 +9,6 @@ type SignInProps = {
   onSignedIn: (user: SessionUser) => void
 }
 
-const ledgerRows = [
-  { label: '01 / people', value: 'Employee register' },
-  { label: '02 / pay', value: 'Salary history' },
-  { label: '03 / insight', value: 'Pay reporting' },
-]
-
 export function SignIn({ notice, onSignedIn }: SignInProps) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -49,17 +43,25 @@ export function SignIn({ notice, onSignedIn }: SignInProps) {
         <div className="brand-copy">
           <p className="eyebrow">A clearer view of your people</p>
           <h1 id="brand-heading">People first.<br /><em>Pay, understood.</em></h1>
-          <p>A secure HR workspace for your employee register, salary histories, and clear pay reporting.</p>
+          <p>A secure place for the people and decisions that shape your organization.</p>
         </div>
 
-        <div className="ledger-art" role="img" aria-label="Employee records, salary history, and HR reporting">
-          <div className="ledger-art-head"><span className="micro-label">Inside your HR workspace</span></div>
-          {ledgerRows.map((row) => (
-            <div className="ledger-row" key={row.label}>
-              <span className="ledger-row-label">{row.label}</span>
-              <span className="ledger-row-value">{row.value}</span>
-            </div>
-          ))}
+        <div className="brand-art" aria-hidden="true">
+          <svg viewBox="0 0 620 210" preserveAspectRatio="xMidYMid meet">
+            <defs>
+              <linearGradient id="brand-art-gradient" x1="0" x2="1" y1="0" y2="1">
+                <stop offset="0" stopColor="#72e0c9" stopOpacity=".25" />
+                <stop offset=".52" stopColor="#72e0c9" />
+                <stop offset="1" stopColor="#e6a18a" />
+              </linearGradient>
+            </defs>
+            <path className="brand-art-thread brand-art-thread-muted" d="M-24 153C78 99 116 182 202 142S314 43 393 87s112 95 251 8" />
+            <path className="brand-art-thread brand-art-thread-muted" d="M-20 174C72 124 118 199 210 160S322 68 398 108s117 92 246 18" />
+            <path className="brand-art-thread brand-art-thread-muted" d="M-18 194C74 149 127 216 217 180S330 92 405 129s117 87 237 29" />
+            <path className="brand-art-thread brand-art-thread-focus" d="M-18 127C76 77 118 157 202 119S314 20 393 64s112 95 251 8" />
+            <circle className="brand-art-orbit" cx="203" cy="119" r="7" />
+            <circle className="brand-art-orbit brand-art-orbit-accent" cx="393" cy="64" r="5" />
+          </svg>
         </div>
 
         <footer className="panel-footer">
@@ -74,7 +76,7 @@ export function SignIn({ notice, onSignedIn }: SignInProps) {
         <div className="signin-card">
           <p className="form-kicker">People &amp; pay / Secure access</p>
           <h2 id="signin-heading">Welcome<br />back.</h2>
-          <p className="signin-intro">Sign in to manage employee records and see how your organization pays people.</p>
+          <p className="signin-intro">Sign in to access your organization’s HR workspace.</p>
 
           {notice && <p className="form-notice" role="status">{notice}</p>}
           {error && <p className="form-notice" role="alert">{error}</p>}

@@ -14,9 +14,9 @@ describe('SignIn', () => {
 
     expect(screen.getByRole('heading', { name: /people first.*pay, understood/i })).toBeTruthy()
     expect(screen.getByText('People & pay / Secure access')).toBeTruthy()
-    expect(screen.getByText(/manage employee records and see how your organization pays people/i)).toBeTruthy()
-    expect(screen.getByText('Inside your HR workspace')).toBeTruthy()
-    expect(screen.queryByText(/what belongs in view/i)).toBeNull()
+    expect(screen.getByText(/a secure place for the people and decisions that shape your organization/i)).toBeTruthy()
+    expect(screen.getByText(/sign in to access your organization’s HR workspace/i)).toBeTruthy()
+    expect(screen.queryByText(/inside your HR workspace|employee register|salary history|pay reporting|what belongs in view/i)).toBeNull()
   })
 
   it('submits credentials and hands the authenticated HR user to the app', async () => {
