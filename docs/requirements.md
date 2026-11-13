@@ -10,6 +10,7 @@ Replace ACME’s spreadsheet-based salary records with a secure web workspace fo
 - Create, search, filter, view, and update employee profiles in a paginated directory.
 - Record compensation by amount, currency, and effective date; preserve prior records and show which salary applies on a given date.
 - Summarize headcount, total, average, median, and minimum-to-maximum pay by country, department, or role, with status, currency, and effective-date filters. Keep aggregates separate by currency; never imply an exchange-rate conversion.
+- Present those measures in a salary analytics dashboard with clear comparisons that do not visually equate unlike currencies.
 - Export the currently filtered pay summary as a spreadsheet-friendly CSV with its date, currency, and active filters included.
 - Seed 10,000 deterministic synthetic employees with varied countries, departments, statuses, and dated salary records.
 - Provide responsive, accessible UI states and clear validation, loading, empty, and error feedback.

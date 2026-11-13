@@ -13,8 +13,19 @@ function amount(value: string, currency: string, maxFractionDigits = 4) {
   return `${currency} ${grouped}${decimals ? `.${decimals}` : ''}`
 }
 
+function sumAmounts(values: string[]) {
+  const scale = 4
+  const scaledTotal = values.reduce((total, value) => {
+    const [whole, fraction = ''] = value.split('.')
+    return total + BigInt(`${whole}${fraction.padEnd(scale, '0').slice(0, scale)}`)
+  }, 0n)
+  const whole = (scaledTotal / 10_000n).toString()
+  const fraction = (scaledTotal % 10_000n).toString().padStart(scale, '0').replace(/0+$/, '')
+  return fraction ? `${whole}.${fraction}` : whole
+}
+
 export function PayIntelligence() {
-  const [groupBy, setGroupBy] = useState<'country' | 'department' | 'job_title'>('department')
+  const [groupBy, setGroupBy] = useState<'country' | 'department' | 'job_title'>('country')
   const [country, setCountry] = useState('')
   const [currency, setCurrency] = useState('')
   const [status, setStatus] = useState<PayReportFilters['status'] | ''>('')
@@ -39,9 +50,12 @@ export function PayIntelligence() {
   const currencies = Array.from(new Set(result?.data.map((row) => row.currency) ?? []))
   const totals = currencies.map((code) => ({
     currency: code,
-    value: result?.data.filter((row) => row.currency === code).reduce((sum, row) => sum + Number(row.total_salary), 0) ?? 0,
+    value: sumAmounts(result?.data.filter((row) => row.currency === code).map((row) => row.total_salary) ?? []),
   }))
-  const max = Math.max(1, ...(result?.data.map((row) => Number(row.total_salary)) ?? []))
+  const maxByCurrency = new Map(currencies.map((code) => [
+    code,
+    Math.max(1, ...(result?.data.filter((row) => row.currency === code).map((row) => Number(row.total_salary)) ?? [])),
+  ]))
 
   function downloadCsv() {
     if (!result) return
@@ -67,8 +81,8 @@ export function PayIntelligence() {
     <section className="pay-intelligence" aria-labelledby="pay-title">
       <div className="pay-hero">
         <div className="pay-hero-copy">
-          <p className="pay-overline"><span>PAY INTELLIGENCE</span><span>LIVE LEDGER · 02</span></p>
-          <h1 id="pay-title">See where<br /><em>pay takes shape.</em></h1>
+          <p className="pay-overline"><span>SALARY ANALYTICS DASHBOARD</span><span>LIVE LEDGER · 02</span></p>
+          <h1 id="pay-title">Understand the<br /><em>shape of pay.</em></h1>
           <p className="pay-deck">A clear view of compensation across the organization, grouped in the currency it is paid.</p>
         </div>
         <div className="pay-orbit" aria-hidden="true"><span>PEOPLE</span><strong>{count.toLocaleString()}</strong><i>in view</i><b>✳</b></div>
@@ -84,8 +98,11 @@ export function PayIntelligence() {
       </div>
 
       <div className="pay-summary-row">
-        <article className="pay-summary-people"><span>PEOPLE WITH ACTIVE PAY</span><strong>{loading && !result ? '—' : count.toLocaleString()}</strong><small>Filtered to the selected date</small></article>
-        {totals.length ? totals.map((total) => <article className="pay-summary-total" key={total.currency}><span>TOTAL · {total.currency}</span><strong>{amount(String(total.value), total.currency)}</strong><small>Across {count.toLocaleString()} people in view</small></article>) : <article className="pay-summary-total"><span>TOTAL PAYROLL</span><strong>{loading ? 'Reading…' : '—'}</strong><small>Grouped by currency</small></article>}
+        <article className="pay-summary-people"><span>PEOPLE WITH EFFECTIVE PAY</span><strong>{loading && !result ? '—' : count.toLocaleString()}</strong><small>Matching the selected date and filters</small></article>
+        <article className="pay-summary-groups"><span>GROUPS IN VIEW</span><strong>{loading && !result ? '—' : (result?.meta.group_count ?? 0).toLocaleString()}</strong><small>Grouped by {groupBy === 'job_title' ? 'role' : groupBy}</small></article>
+        <article className="pay-summary-currencies"><div className="pay-currency-summary-head"><span>PAYROLL BY CURRENCY</span><small>{currencies.length} {currencies.length === 1 ? 'currency' : 'currencies'}</small></div>
+          {totals.length ? <div className="pay-currency-grid">{totals.map((total) => <div className="pay-currency-total" key={total.currency}><span>{total.currency}</span><strong>{amount(total.value, total.currency)}</strong></div>)}</div> : <small>{loading ? 'Reading payroll totals…' : 'No payroll totals match these filters.'}</small>}
+        </article>
       </div>
 
       <div className="pay-breakdown-head"><div><p className="pay-section-label">THE DISTRIBUTION / 01</p><h2>{groupBy === 'job_title' ? 'By role' : `By ${groupBy}`}</h2></div><div className="pay-breakdown-tools"><span>{result?.meta.group_count ?? 0} groups</span><button type="button" onClick={downloadCsv} disabled={!result || loading || Boolean(error)}>Export CSV <span aria-hidden="true">↗</span></button></div></div>
@@ -98,12 +115,12 @@ export function PayIntelligence() {
               <span>{row.employee_count.toLocaleString()} {row.employee_count === 1 ? 'person' : 'people'} · avg. ≈ {amount(row.average_salary, row.currency, 2)}</span>
               <span className="pay-row-range">Median {amount(row.median_salary, row.currency, 2)} · range {amount(row.minimum_salary, row.currency)} — {amount(row.maximum_salary, row.currency)}</span>
             </div>
-            <div className="pay-row-track" aria-label={`${Math.round(Number(row.total_salary) / max * 100)} percent of largest group`}><span style={{ width: `${Math.max(3, Number(row.total_salary) / max * 100)}%` }} /></div>
+            <div className="pay-row-track" aria-label={`${Math.round(Number(row.total_salary) / (maxByCurrency.get(row.currency) ?? 1) * 100)} percent of largest ${row.currency} group`}><span style={{ width: `${Math.max(3, Number(row.total_salary) / (maxByCurrency.get(row.currency) ?? 1) * 100)}%` }} /></div>
             <strong className="pay-row-total">{amount(row.total_salary, row.currency)}</strong>
           </article>)}
         </div>
       )}
-      <p className="pay-footnote">Totals stay separate by currency. This view does not convert exchange rates.</p>
+      <p className="pay-footnote">Totals stay separate by currency. Bar lengths compare groups within each currency; no exchange rates are applied.</p>
     </section>
   )
 }

@@ -39,7 +39,7 @@ export function WorkspaceShell({ user, onSignOut }: WorkspaceShellProps) {
           </button>
           <button className="workspace-nav-item" type="button" aria-current={section === 'pay' ? 'page' : undefined} onClick={() => setSection('pay')}>
             <span className="workspace-nav-symbol" aria-hidden="true">◫</span>
-            <span>Pay intelligence</span>
+            <span>Salary analytics</span>
             <span className="workspace-nav-status">LIVE</span>
           </button>
         </nav>
@@ -48,7 +48,7 @@ export function WorkspaceShell({ user, onSignOut }: WorkspaceShellProps) {
 
       <section className="workspace-main">
         <header className="workspace-topbar">
-          <p>Human resources <span aria-hidden="true">/</span> {section === 'people' ? 'People register' : 'Pay intelligence'}</p>
+          <p>Human resources <span aria-hidden="true">/</span> {section === 'people' ? 'People register' : 'Salary analytics'}</p>
           <div className="user-menu">
             <span className="user-initials" aria-hidden="true">{initials}</span>
             <span className="user-email">{user.email}</span>

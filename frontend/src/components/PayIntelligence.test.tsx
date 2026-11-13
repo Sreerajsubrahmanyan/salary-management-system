@@ -19,10 +19,10 @@ describe('PayIntelligence', () => {
     expect(screen.getByText(/Median USD 80,000/)).toBeTruthy()
     expect(screen.getByText(/range USD 60,000 — USD 150,000/)).toBeTruthy()
 
-    fireEvent.change(screen.getByLabelText('Read the ledger by'), { target: { value: 'country' } })
-    await waitFor(() => expect(getPayReport).toHaveBeenLastCalledWith(expect.objectContaining({ group_by: 'country' })))
+    fireEvent.change(screen.getByLabelText('Read the ledger by'), { target: { value: 'job_title' } })
+    await waitFor(() => expect(getPayReport).toHaveBeenLastCalledWith(expect.objectContaining({ group_by: 'job_title' })))
 
     fireEvent.change(screen.getByLabelText('Employment status'), { target: { value: 'active' } })
-    await waitFor(() => expect(getPayReport).toHaveBeenLastCalledWith(expect.objectContaining({ group_by: 'country', status: 'active' })))
+    await waitFor(() => expect(getPayReport).toHaveBeenLastCalledWith(expect.objectContaining({ group_by: 'job_title', status: 'active' })))
   })
 })
