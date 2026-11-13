@@ -60,6 +60,8 @@ class DemoEmployeeSeeder
   end
 
   def employee_status(index)
+    # DEMO-00020 is the curated Hana Okafor profile with a current salary record.
+    return "active" if index == 20
     return "terminated" if (index % 20).zero?
     return "on_leave" if (index % 17).zero?
 

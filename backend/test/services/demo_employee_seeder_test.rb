@@ -15,8 +15,21 @@ class DemoEmployeeSeederTest < ActiveSupport::TestCase
     assert_equal "DEMO-10000", last[:employee_number]
     assert_equal "employee.00001@example.test", first[:email]
     assert_equal 13, countries.length
-    assert_equal "terminated", seeder.employee_status(20)
+    assert_equal "active", seeder.employee_status(20)
+    assert_equal "terminated", seeder.employee_status(40)
     assert_equal "on_leave", seeder.employee_status(17)
+  end
+
+  test "keeps the curated Hana Okafor profile active with an open current salary" do
+    seeder = DemoEmployeeSeeder.new
+    employee = seeder.employee_attributes(20, Time.utc(2026, 1, 1))
+    current_salary = seeder.salary_attributes(20, 20, Time.utc(2026, 1, 1)).find do |record|
+      record[:effective_date] == Date.new(2024, 1, 1)
+    end
+
+    assert_equal [ "Hana", "Okafor" ], employee.values_at(:first_name, :last_name)
+    assert_equal "active", employee[:status]
+    assert_nil current_salary[:end_date]
   end
 
   test "generates two non-overlapping salary periods with explicit currency" do
