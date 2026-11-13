@@ -56,6 +56,17 @@ export function PayIntelligence() {
     code,
     Math.max(1, ...(result?.data.filter((row) => row.currency === code).map((row) => Number(row.total_salary)) ?? [])),
   ]))
+  const maxMedianByCurrency = new Map(currencies.map((code) => [
+    code,
+    Math.max(1, ...(result?.data.filter((row) => row.currency === code).map((row) => Number(row.median_salary)) ?? [])),
+  ]))
+  const chartRows = [...(result?.data ?? [])]
+    .sort((left, right) => right.employee_count - left.employee_count || left.group_value.localeCompare(right.group_value))
+    .slice(0, 6)
+  const medianChartRows = [...(result?.data ?? [])]
+    .sort((left, right) => Number(right.median_salary) / (maxMedianByCurrency.get(right.currency) ?? 1) - Number(left.median_salary) / (maxMedianByCurrency.get(left.currency) ?? 1))
+    .slice(0, 6)
+  const maxPeople = Math.max(1, ...chartRows.map((row) => row.employee_count))
 
   function downloadCsv() {
     if (!result) return
@@ -104,6 +115,34 @@ export function PayIntelligence() {
           {totals.length ? <div className="pay-currency-grid">{totals.map((total) => <div className="pay-currency-total" key={total.currency}><span>{total.currency}</span><strong>{amount(total.value, total.currency)}</strong></div>)}</div> : <small>{loading ? 'Reading payroll totals…' : 'No payroll totals match these filters.'}</small>}
         </article>
       </div>
+
+      {!error && result?.data.length ? <div className="pay-analytics-grid" aria-label="Salary analytics charts">
+        <article className="pay-chart-card">
+          <div className="pay-chart-heading"><div><p>01 / Workforce</p><h2>Where people sit</h2></div><span>HEADCOUNT</span></div>
+          <p className="pay-chart-note">Largest groups in this view</p>
+          <div className="pay-chart-rows">
+            {chartRows.map((row) => <div className="pay-chart-row" key={`people-${row.group_value}-${row.currency}`}>
+              <div className="pay-chart-label"><span>{row.group_value}</span><i>{row.currency}</i></div>
+              <div className="pay-chart-track" role="img" aria-label={`${row.employee_count.toLocaleString()} people`}><span style={{ width: `${Math.max(4, row.employee_count / maxPeople * 100)}%` }} /></div>
+              <strong>{row.employee_count.toLocaleString()}</strong>
+            </div>)}
+          </div>
+        </article>
+        <article className="pay-chart-card pay-chart-median">
+          <div className="pay-chart-heading"><div><p>02 / Compensation</p><h2>Median by group</h2></div><span>BY CURRENCY</span></div>
+          <p className="pay-chart-note">Bar length is relative only within each currency</p>
+          <div className="pay-chart-rows">
+            {medianChartRows.map((row) => {
+              const relativeMedian = Number(row.median_salary) / (maxMedianByCurrency.get(row.currency) ?? 1)
+              return <div className="pay-chart-row" key={`median-${row.group_value}-${row.currency}`}>
+                <div className="pay-chart-label"><span>{row.group_value}</span><i>{row.currency}</i></div>
+                <div className="pay-chart-track" role="img" aria-label={`${Math.round(relativeMedian * 100)} percent of the highest ${row.currency} median`}><span style={{ width: `${Math.max(4, relativeMedian * 100)}%` }} /></div>
+                <strong>{amount(row.median_salary, row.currency, 2)}</strong>
+              </div>
+            })}
+          </div>
+        </article>
+      </div> : null}
 
       <div className="pay-breakdown-head"><div><p className="pay-section-label">THE DISTRIBUTION / 01</p><h2>{groupBy === 'job_title' ? 'By role' : `By ${groupBy}`}</h2></div><div className="pay-breakdown-tools"><span>{result?.meta.group_count ?? 0} groups</span><button type="button" onClick={downloadCsv} disabled={!result || loading || Boolean(error)}>Export CSV <span aria-hidden="true">↗</span></button></div></div>
       {error ? <div className="pay-state" role="alert"><strong>The ledger could not be read.</strong><span>{error}</span><button type="button" onClick={() => setRetry((value) => value + 1)}>Try again ↗</button></div> : loading && !result ? <div className="pay-state">Reading the compensation ledger…</div> : !result?.data.length ? <div className="pay-state">No salary records match these filters. Widen the view to see more.</div> : (

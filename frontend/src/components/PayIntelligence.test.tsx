@@ -13,9 +13,11 @@ describe('PayIntelligence', () => {
     })
 
     render(<PayIntelligence />)
-    expect(await screen.findByText('Engineering')).toBeTruthy()
+    expect((await screen.findAllByText('Engineering')).length).toBeGreaterThan(0)
+    expect(screen.getByText('Where people sit')).toBeTruthy()
+    expect(screen.getByText('Median by group')).toBeTruthy()
     expect(screen.getAllByText('USD 3,500,000')).toHaveLength(2)
-    expect(screen.getAllByText('42')).toHaveLength(2)
+    expect(screen.getAllByText('42')).toHaveLength(3)
     expect(screen.getByText(/Median USD 80,000/)).toBeTruthy()
     expect(screen.getByText(/range USD 60,000 — USD 150,000/)).toBeTruthy()
 
