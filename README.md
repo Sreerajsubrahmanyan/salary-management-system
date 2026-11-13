@@ -1,6 +1,6 @@
 # Salary Management System
 
-Web-based salary management for an organization with 10,000 employees across multiple countries. The initial user is the organization's HR Manager, who needs to maintain employee compensation and answer questions about pay. This repository currently contains the application scaffolds and Phase 1 product and architecture documentation; application features are planned incrementally.
+Web-based salary management for an organization with 10,000 employees across multiple countries. The initial user is the organization's HR Manager, who needs to maintain employee compensation and answer questions about pay. The repository currently contains a versioned API health endpoint and the initial employee and salary-history data model; user workflows are being added incrementally.
 
 ## Stack
 
@@ -38,7 +38,7 @@ cd frontend
 npm run dev -- --host 0.0.0.0 --port 5173
 ```
 
-The current scaffold has no salary-management endpoints or tables yet. API proxying, database seed instructions, and integrated workflow details will be added with their implementation phases. Do not put credentials or production data in the repository.
+The API currently exposes health endpoints only; employee and salary models are not yet available through application endpoints. API proxying, database seed instructions, and integrated workflow details will be added with their implementation phases. Do not put credentials or production data in the repository.
 
 ## Checks
 

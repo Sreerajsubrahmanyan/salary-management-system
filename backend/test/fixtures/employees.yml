@@ -1,0 +1,10 @@
+one:
+  employee_number: EMP-0001
+  first_name: Ada
+  last_name: Lovelace
+  email: ada@example.test
+  country_code: US
+  department: Engineering
+  job_title: Analyst
+  status: active
+  hire_date: 2020-01-15
