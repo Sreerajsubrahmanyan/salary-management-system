@@ -8,16 +8,10 @@ namespace :render do
     end
 
     accounts = [
-      { email: ENV.fetch("RENDER_HR_EMAIL"), password: ENV.fetch("RENDER_HR_PASSWORD") }
+      { email: ENV.fetch("RENDER_HR_EMAIL"), password: ENV.fetch("RENDER_HR_PASSWORD") },
+      # Deliberately public credentials for the synthetic-data recruiter demo.
+      { email: "demo.hr@example.com", password: "demo_example@123" }
     ]
-    demo_email = ENV["RENDER_DEMO_HR_EMAIL"]
-    demo_password = ENV["RENDER_DEMO_HR_PASSWORD"]
-
-    if demo_email.present? != demo_password.present?
-      raise "Set both RENDER_DEMO_HR_EMAIL and RENDER_DEMO_HR_PASSWORD to create the additional demo login."
-    end
-
-    accounts << { email: demo_email, password: demo_password } if demo_email.present?
     RenderHrAccountBootstrapper.new(accounts).call
   end
 end

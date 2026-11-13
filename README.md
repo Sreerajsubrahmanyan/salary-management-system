@@ -10,7 +10,17 @@ A salary management workspace for an HR Manager to maintain employee and dated c
 
 ## Current status
 
-Implemented: protected HR sessions, employee directory and profile APIs/UI, per-employee salary history graph, dated salary-history API and salary-change entry UI, 10,000 synthetic employee seed, and a currency-separated salary analytics dashboard with filtered CSV export. A Render Blueprint is prepared; the live services still need to be created in a Render account. See the [requirements and delivery status](docs/requirements.md), [implementation plan](docs/implementation-plan.md), and [Render deployment guide](docs/deployment.md).
+Implemented: protected HR sessions, employee directory and profile APIs/UI, per-employee salary history graph, dated salary-history API and salary-change entry UI, 10,000 synthetic employee seed, and a currency-separated salary analytics dashboard with filtered CSV export. The app is deployed on Render; see the [requirements and delivery status](docs/requirements.md), [implementation plan](docs/implementation-plan.md), and [Render deployment guide](docs/deployment.md).
+
+## Live recruiter demo
+
+The public demo login has HR manager access to fictional employee and salary data:
+
+- App: [Salary Management System](https://salary-management-frontend-cbth.onrender.com)
+- Email: `demo.hr@example.com`
+- Password: `demo_example@123`
+
+This shared account is intentionally public for recruiter access. Do not use it with real employee data.
 
 ## Development setup
 
