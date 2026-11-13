@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from 'react'
 import { ApiError, createEmployee, createSalaryRecord, getEmployee, listEmployees, updateEmployee } from '../api/client'
 import type { Employee, EmployeeFilters, EmployeeInput, SalaryRecord, SalaryRecordInput } from '../api/types'
+import { SalaryHistoryChart } from './SalaryHistoryChart'
 import './EmployeeWorkspace.css'
 
 type ViewState =
@@ -345,6 +346,8 @@ function EmployeeProfile({ employeeNumber, onBack, onEdit, onSalarySaved }: Prof
         <div><span>Joined</span><strong>{formatDate(employee.hire_date)}</strong></div>
         <div className="fact-pay"><span>Current salary</span><strong><SalaryValue record={employee.current_salary} /></strong></div>
       </div>
+
+      <SalaryHistoryChart records={records} employeeName={`${employee.first_name} ${employee.last_name}`} />
 
       <div className="history-heading">
         <div><p className="workspace-kicker">01 <span className="directory-slash">/</span> Change log</p><h2>Salary history</h2></div>
