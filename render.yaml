@@ -32,6 +32,10 @@ services:
         sync: false
       - key: RENDER_HR_PASSWORD
         sync: false
+      - key: RENDER_DEMO_HR_EMAIL
+        sync: false
+      - key: RENDER_DEMO_HR_PASSWORD
+        sync: false
 
   - type: web
     name: salary-management-frontend
