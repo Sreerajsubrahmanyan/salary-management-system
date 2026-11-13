@@ -8,7 +8,7 @@ vi.mock('../api/client', () => ({ getPayReport: vi.fn() }))
 describe('PayIntelligence', () => {
   it('shows grouped payroll data and reloads when grouping changes', async () => {
     vi.mocked(getPayReport).mockResolvedValue({
-      data: [{ group_value: 'Engineering', currency: 'USD', employee_count: 42, total_salary: '3500000.0000', average_salary: '83333.3333' }],
+      data: [{ group_value: 'Engineering', currency: 'USD', employee_count: 42, total_salary: '3500000.0000', average_salary: '83333.3333', minimum_salary: '60000', median_salary: '80000', maximum_salary: '150000' }],
       meta: { group_by: 'department', as_of: '2026-01-01', group_count: 1 },
     })
 
@@ -16,6 +16,8 @@ describe('PayIntelligence', () => {
     expect(await screen.findByText('Engineering')).toBeTruthy()
     expect(screen.getAllByText('USD 3,500,000')).toHaveLength(2)
     expect(screen.getAllByText('42')).toHaveLength(2)
+    expect(screen.getByText(/Median USD 80,000/)).toBeTruthy()
+    expect(screen.getByText(/range USD 60,000 — USD 150,000/)).toBeTruthy()
 
     fireEvent.change(screen.getByLabelText('Read the ledger by'), { target: { value: 'country' } })
     await waitFor(() => expect(getPayReport).toHaveBeenLastCalledWith(expect.objectContaining({ group_by: 'country' })))

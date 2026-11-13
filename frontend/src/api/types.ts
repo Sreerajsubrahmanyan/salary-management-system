@@ -70,6 +70,9 @@ export type PayReportRow = {
   employee_count: number
   total_salary: string
   average_salary: string
+  minimum_salary: string
+  median_salary: string
+  maximum_salary: string
 }
 
 export type PayReportPayload = {

@@ -24,7 +24,10 @@ class PayReportQuery
     group_sql = Arel.sql("employees.#{group_column}, salary_records.currency")
     aggregate_sql = Arel.sql(
       "employees.#{group_column}, salary_records.currency, " \
-      "COUNT(DISTINCT employees.id), SUM(salary_records.amount), AVG(salary_records.amount)"
+      "COUNT(DISTINCT employees.id), SUM(salary_records.amount), AVG(salary_records.amount), " \
+      "MIN(salary_records.amount), " \
+      "percentile_disc(0.5) WITHIN GROUP (ORDER BY salary_records.amount), " \
+      "MAX(salary_records.amount)"
     )
 
     rows = salary_records
@@ -51,13 +54,16 @@ class PayReportQuery
   end
 
   def serialize_row(row)
-    group_value, currency, employee_count, total_salary, average_salary = row
+    group_value, currency, employee_count, total_salary, average_salary, minimum_salary, median_salary, maximum_salary = row
     {
       group_value: group_value,
       currency: currency,
       employee_count: employee_count,
       total_salary: total_salary.to_s("F"),
-      average_salary: average_salary.to_s("F")
+      average_salary: average_salary.to_s("F"),
+      minimum_salary: minimum_salary.to_s("F"),
+      median_salary: median_salary.to_s("F"),
+      maximum_salary: maximum_salary.to_s("F")
     }
   end
 

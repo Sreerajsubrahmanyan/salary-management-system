@@ -15,7 +15,7 @@ module Api
           assert_equal "Authentication required", response.parsed_body["error"]
         end
 
-        test "groups SQL totals and averages by dimension and currency" do
+        test "groups SQL totals and salary distribution by dimension and currency" do
           add_employee_with_salary("PAY-US-1", country_code: "US", amount: "1000", currency: "USD")
           add_employee_with_salary("PAY-US-2", country_code: "US", amount: "3000", currency: "USD")
           add_employee_with_salary("PAY-IN-1", country_code: "IN", amount: "100000", currency: "INR")
@@ -28,8 +28,14 @@ module Api
           assert_equal [ "INR", "USD" ], rows.map { |row| row["currency"] }
           assert_equal [ 1, 2 ], rows.map { |row| row["employee_count"] }
           assert_equal "100000.0", rows[0]["total_salary"]
+          assert_equal "100000.0", rows[0]["minimum_salary"]
+          assert_equal "100000.0", rows[0]["median_salary"]
+          assert_equal "100000.0", rows[0]["maximum_salary"]
           assert_equal "4000.0", rows[1]["total_salary"]
           assert_equal "2000.0", rows[1]["average_salary"]
+          assert_equal "1000.0", rows[1]["minimum_salary"]
+          assert_equal "1000.0", rows[1]["median_salary"]
+          assert_equal "3000.0", rows[1]["maximum_salary"]
           assert_equal "department", response.parsed_body.dig("meta", "group_by")
         end
 

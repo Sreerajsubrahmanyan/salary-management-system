@@ -72,7 +72,11 @@ export function PayIntelligence() {
         <div className="pay-rows">
           {result.data.map((row, index) => <article className="pay-row" key={`${row.group_value}-${row.currency}`}>
             <span className="pay-row-index">{String(index + 1).padStart(2, '0')}</span>
-            <div className="pay-row-label"><div className="pay-row-title"><strong>{row.group_value}</strong><span className="pay-currency-tag">{row.currency}</span></div><span>{row.employee_count.toLocaleString()} {row.employee_count === 1 ? 'person' : 'people'} · avg. ≈ {amount(row.average_salary, row.currency, 2)}</span></div>
+            <div className="pay-row-label">
+              <div className="pay-row-title"><strong>{row.group_value}</strong><span className="pay-currency-tag">{row.currency}</span></div>
+              <span>{row.employee_count.toLocaleString()} {row.employee_count === 1 ? 'person' : 'people'} · avg. ≈ {amount(row.average_salary, row.currency, 2)}</span>
+              <span className="pay-row-range">Median {amount(row.median_salary, row.currency, 2)} · range {amount(row.minimum_salary, row.currency)} — {amount(row.maximum_salary, row.currency)}</span>
+            </div>
             <div className="pay-row-track" aria-label={`${Math.round(Number(row.total_salary) / max * 100)} percent of largest group`}><span style={{ width: `${Math.max(3, Number(row.total_salary) / max * 100)}%` }} /></div>
             <strong className="pay-row-total">{amount(row.total_salary, row.currency)}</strong>
           </article>)}
