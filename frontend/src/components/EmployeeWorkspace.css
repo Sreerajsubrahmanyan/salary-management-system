@@ -70,7 +70,6 @@
   border-bottom: 1px solid var(--line);
 }
 
-.summary-index { color: var(--terracotta); font-family: var(--serif); font-size: 21px; }
 .summary-label { color: var(--ink-soft); font-size: 11px; }
 .directory-summary strong { color: var(--ink); font-family: var(--serif); font-size: 31px; font-weight: 400; letter-spacing: -0.04em; }
 .summary-rule { width: 1px; height: 29px; margin: 0 5px; background: var(--line); }
@@ -268,7 +267,6 @@
   .directory-summary { gap: 9px; }
   .summary-label { font-size: 9px; }
   .directory-summary strong { font-size: 27px; }
-  .summary-index { font-size: 17px; }
   .register-caption { align-items: flex-start; gap: 9px; }
   .register-caption > span:last-child { text-align: right; }
   .pagination-note { display: none; }

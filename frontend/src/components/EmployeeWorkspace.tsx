@@ -158,7 +158,6 @@ function EmployeeDirectory({ onOpen, onAdd }: DirectoryProps) {
       </div>
 
       <div className="directory-summary" aria-live="polite">
-        <span className="summary-index">01</span>
         <span className="summary-label">People in the register</span>
         <strong>{isLoading && meta.total_count === 0 ? '—' : meta.total_count.toLocaleString()}</strong>
         <span className="summary-rule" />
