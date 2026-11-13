@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { getPayReport } from '../api/client'
-import type { PayReportPayload } from '../api/types'
+import type { PayReportFilters, PayReportPayload } from '../api/types'
 import './PayIntelligence.css'
 
 const today = new Date().toISOString().slice(0, 10)
@@ -16,22 +16,23 @@ export function PayIntelligence() {
   const [groupBy, setGroupBy] = useState<'country' | 'department' | 'job_title'>('department')
   const [country, setCountry] = useState('')
   const [currency, setCurrency] = useState('')
+  const [status, setStatus] = useState<PayReportFilters['status'] | ''>('')
   const [asOf, setAsOf] = useState(today)
   const [result, setResult] = useState<PayReportPayload | null>(null)
   const [error, setError] = useState('')
   const [loadedKey, setLoadedKey] = useState('')
   const [retry, setRetry] = useState(0)
-  const requestKey = `${groupBy}|${country}|${currency}|${asOf}|${retry}`
+  const requestKey = `${groupBy}|${country}|${currency}|${status}|${asOf}|${retry}`
   const loading = loadedKey !== requestKey
 
   useEffect(() => {
     let active = true
-    getPayReport({ group_by: groupBy, country: country || undefined, currency: currency || undefined, as_of: asOf })
+    getPayReport({ group_by: groupBy, country: country || undefined, currency: currency || undefined, status: status || undefined, as_of: asOf })
       .then((payload) => { if (active) { setResult(payload); setError('') } })
       .catch((caught: unknown) => { if (active) setError(caught instanceof Error ? caught.message : 'The report could not be loaded.') })
       .finally(() => { if (active) setLoadedKey(requestKey) })
     return () => { active = false }
-  }, [groupBy, country, currency, asOf, retry, requestKey])
+  }, [groupBy, country, currency, status, asOf, retry, requestKey])
 
   const count = result?.data.reduce((sum, row) => sum + row.employee_count, 0) ?? 0
   const currencies = Array.from(new Set(result?.data.map((row) => row.currency) ?? []))
@@ -57,6 +58,7 @@ export function PayIntelligence() {
         <label><span>Read the ledger by</span><select value={groupBy} onChange={(event) => setGroupBy(event.target.value as typeof groupBy)}><option value="department">Department</option><option value="country">Country</option><option value="job_title">Role</option></select></label>
         <label><span>Country code</span><input aria-label="Country code" maxLength={2} value={country} onChange={(event) => setCountry(event.target.value.toUpperCase())} placeholder="All countries" /></label>
         <label><span>Currency</span><input aria-label="Currency" maxLength={3} value={currency} onChange={(event) => setCurrency(event.target.value.toUpperCase())} placeholder="All currencies" /></label>
+        <label><span>Employment status</span><select aria-label="Employment status" value={status} onChange={(event) => setStatus(event.target.value as PayReportFilters['status'] | '')}><option value="">All statuses</option><option value="active">Active</option><option value="on_leave">On leave</option><option value="terminated">Former</option></select></label>
         <label><span>Effective on</span><input aria-label="Effective on" type="date" value={asOf} onChange={(event) => setAsOf(event.target.value)} /></label>
       </div>
 

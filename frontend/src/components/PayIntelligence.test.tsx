@@ -19,5 +19,8 @@ describe('PayIntelligence', () => {
 
     fireEvent.change(screen.getByLabelText('Read the ledger by'), { target: { value: 'country' } })
     await waitFor(() => expect(getPayReport).toHaveBeenLastCalledWith(expect.objectContaining({ group_by: 'country' })))
+
+    fireEvent.change(screen.getByLabelText('Employment status'), { target: { value: 'active' } })
+    await waitFor(() => expect(getPayReport).toHaveBeenLastCalledWith(expect.objectContaining({ group_by: 'country', status: 'active' })))
   })
 })

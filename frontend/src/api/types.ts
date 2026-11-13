@@ -81,5 +81,6 @@ export type PayReportFilters = {
   group_by?: 'country' | 'department' | 'job_title'
   country?: string
   currency?: string
+  status?: Employee['status']
   as_of?: string
 }

@@ -9,7 +9,7 @@ Replace ACME’s spreadsheet-based salary records with a secure web workspace fo
 - HR Manager sign-in and protected access to employee and pay information.
 - Create, search, filter, view, and update employee profiles in a paginated directory.
 - Record compensation by amount, currency, and effective date; preserve prior records and show which salary applies on a given date.
-- Summarize headcount, total pay, and average pay by country, department, or role. Keep aggregates separate by currency; never imply an exchange-rate conversion.
+- Summarize headcount, total pay, and average pay by country, department, or role, with status, currency, and effective-date filters. Keep aggregates separate by currency; never imply an exchange-rate conversion.
 - Seed 10,000 deterministic synthetic employees with varied countries, departments, statuses, and dated salary records.
 - Provide responsive, accessible UI states and clear validation, loading, empty, and error feedback.
 
