@@ -17,6 +17,7 @@ Implemented: protected HR sessions, employee directory and profile APIs/UI, per-
 The app is deployed on Render. The public demo login has HR manager access to fictional employee and salary data:
 
 - App: [Salary Management System](https://salary-management-frontend-cbth.onrender.com)
+- Video demo: [Watch the walkthrough](https://drive.google.com/file/d/1lu6yiTBbujZIFu-3k9V10bq6qy7kycTO/view?usp=sharing)
 - Email: `demo.hr@example.com`
 - Password: `demo_example@123`
 
@@ -69,4 +70,4 @@ cd frontend && npm test && npm run build && npm run lint
 - [Backend API and local setup](backend/README.md)
 - [Render deployment guide](docs/deployment.md)
 
-The commit history is organized into small implementation steps. The live Render deployment is available at the link above; a concise video walkthrough remains a release artifact.
+The commit history is organized into small implementation steps. The live Render deployment and video walkthrough are linked above.
